@@ -38,3 +38,8 @@ coverage/
 
 # Mac trash
 .Trashes
+
+# Environment variables
+.env
+.env.*
+!.env.example
