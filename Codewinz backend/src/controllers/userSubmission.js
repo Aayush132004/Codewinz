@@ -10,7 +10,7 @@ try{
     //problemId sending via param
     const problemId=req.params.id;
     //code and language we take from frontend
-    const {code,language}=req.body;
+    let {code,language}=req.body;
     //from frontend sending cpp as monaco does so chaning here
     if(language==='cpp')
         language='c++'
@@ -95,29 +95,40 @@ let testCasesPassed=0;
 for(const test of testResult){
     if(test.status_id==3){
         testCasesPassed++;
-        runtime=runtime+parseFloat(test.time);
-        memory=Math.max(memory,test.memory);
-        // Update heatmap with today's date
-        const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-        user.heatmap.set(today, (user.heatmap.get(today) || 0) + 1);
-          // Update topics
-        // Update topics - handling both array and single topic cases
-        if (problem.tags && Array.isArray(problem.tags)) {
-          problem.tags.forEach(topic => {
-            if (topic) { // Ensure topic exists
-              user.topics.set(topic, (user.topics.get(topic) || 0) + 1);
-            }
-          });
-        } else if (problem.tags) { // If single topic field exists
-          user.topics.set(problem.tags, (user.topics.get(problem.tags) || 0) + 1);
-        }
-        await user.save();
-        await problem.save();
+        runtime=runtime+parseFloat(test.time || 0);
+        memory=Math.max(memory,test.memory || 0);
     }
-   else {
-     status=getErrorByID(test.status_id);
+    else {
+      status=getErrorByID(test.status_id);
+      errorMessage=test.compile_output || test.stderr || test.message || null;
     }
 }
+
+// Only update solved records, heatmap, and topic counts if status is 'accepted'
+if(status === 'accepted'){
+    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    user.heatmap.set(today, (user.heatmap.get(today) || 0) + 1);
+    
+    // Update topics
+    if (problem.tags && Array.isArray(problem.tags)) {
+      problem.tags.forEach(topic => {
+        if (topic) {
+          user.topics.set(topic, (user.topics.get(topic) || 0) + 1);
+        }
+      });
+    } else if (problem.tags) {
+      user.topics.set(problem.tags, (user.topics.get(problem.tags) || 0) + 1);
+    }
+    
+    await user.save();
+    await problem.save();
+
+    if(!req.result.problemSolved.includes(problemId)){
+        req.result.problemSolved.push(problemId);
+        await req.result.save();
+    }
+}
+
 //store result in database ie update submittedResult as already have reference of object can update without using findById and upadate
 submittedResult.status=status;
 submittedResult.testCasesPassed=testCasesPassed;
@@ -125,12 +136,6 @@ submittedResult.errorMessage=errorMessage;
 submittedResult.runtime=runtime;
 submittedResult.memory=memory;
 await submittedResult.save();
-//in user's solved problem also save problem id if already not there
-//req.result===user information
-if(!req.result.problemSolved.includes((problemId))){
-    req.result.problemSolved.push(problemId);
-    await req.result.save();
-}
 
 // const accepted=(status==="accepted");
 //if accepted true all test case accepted
@@ -139,7 +144,8 @@ res.status(200).json({
  totalTestCases:submittedResult.totalTestCases,
  passedTestCases:submittedResult.testCasesPassed||0,
  runtime,
- memory
+ memory,
+ error: errorMessage
 });
 
 
@@ -160,7 +166,7 @@ const runCode=async(req,res)=>{
     //problemId sending via param
     const problemId=req.params.id;
     //code and language we take from frontend
-    const {code,language}=req.body;
+    let {code,language}=req.body;
     if(language==="cpp")
         language='c++'
     if(!userId||!problemId||!code||!language)
@@ -223,8 +229,8 @@ let runtime=0;
 
 for(const test of testResult){
     if(test.status_id==3){
-        runtime=runtime+parseFloat(test.time);
-        memory=Math.max(memory,test.memory);
+        runtime=runtime+parseFloat(test.time || 0);
+        memory=Math.max(memory,test.memory || 0);
     }
     else{   
          status=getErrorByID(test.status_id);
