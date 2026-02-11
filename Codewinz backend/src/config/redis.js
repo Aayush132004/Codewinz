@@ -5,8 +5,12 @@ const redisClient = createClient({
     password: process.env.REDIS_PASS,
     socket: {
         host: process.env.REDIS_HOST,
-        port: 18080,
+        port: 14138,
     }
+});
+
+redisClient.on('error', (err) => {
+    console.error('Redis client error:', err);
 });
 
 module.exports=redisClient;
