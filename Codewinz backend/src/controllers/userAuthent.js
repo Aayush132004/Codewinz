@@ -287,77 +287,84 @@ const deleteProfile=async(req,res)=>{
 }
 
 
-const sendMail=async(req,res)=>{
-  // console.log(req.body.emailId);
-  try{
-  const emailId=req.body.emailId;
-  //sending mail to this email to login along with mail a low expiry token 
-  const user=await User.findOne({emailId});
-  if(!user)
-    throw new Error("Email Id Is Not Registered");
+const sendMail = async (req, res) => {
+  try {
+    const emailId = req.body.emailId;
+    const user = await User.findOne({ emailId });
+    if (!user) {
+      return res.status(404).json({ message: "Email ID is not registered." });
+    }
 
-  const token= jwt.sign({id:user._id,emailId:emailId,role:user.role},process.env.JWT_KEY,{expiresIn:5*60})//expiry setting 5min of token 
-  //sending this attacked to mail 
+    const token = jwt.sign(
+      { id: user._id, emailId: emailId, role: user.role },
+      process.env.JWT_KEY,
+      { expiresIn: 5 * 60 }
+    );
 
- 
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.SENDER_MAIL,
+        pass: process.env.SENDER_MAIL_PASS,
+      },
+    });
 
-// Create a test account or replace with real credentials.
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.SENDER_MAIL,
-    pass: process.env.SENDER_MAIL_PASS,
-  },
-});
+    const magicLoginLink = `${process.env.FRONTEND_URL}/magic-login/${token}`;
 
-// Wrapp in an async IIFE so we can use await.
-(async () => {
- const info = await transporter.sendMail({
-  from: "CODEWINZ",
-  subject: "Login using mail",
-  to:emailId,
-  html: `
-    <div style="font-family: 'Inter', sans-serif; background-color: #f3f4f6; padding: 32px; border-radius: 12px; max-width: 600px; margin: auto; color: #1f2937;">
-      <h1 style="font-size: 24px; font-weight: 600; margin-bottom: 12px; color: #111827;">
-        Login to CODEWINZ
-      </h1>
-      <p style="font-size: 16px; margin-bottom: 24px;">
-        We received a request to login to your CODEWINZ account. Click the button below to proceed.
-        This link is valid for <strong>5 minutes</strong>.
-      </p>
+    const info = await transporter.sendMail({
+      from: `"CODEWINZ Support" <${process.env.SENDER_MAIL}>`,
+      to: emailId,
+      subject: "🔓 Access Your CODEWINZ Account",
+      text: `Hello,\n\nWe received a request to login to your CODEWINZ account. Click or copy the link below to access your account:\n\n${magicLoginLink}\n\nThis link is valid for 5 minutes. If you did not request this, you can safely ignore this email.\n\nBest regards,\nCODEWINZ Team`,
+      html: `
+        <div style="font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #060608; padding: 40px 20px; color: #e4e4e7; text-align: center;">
+          <div style="background-color: #0f0f11; border: 1px solid #27272a; border-radius: 16px; max-width: 500px; margin: 0 auto; padding: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">
+            <!-- Logo Header -->
+            <div style="margin-bottom: 24px;">
+              <h2 style="color: #ffffff; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin: 0;">
+                CODEWINZ
+              </h2>
+            </div>
+            
+            <!-- Message Body -->
+            <h1 style="font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 16px;">
+              🔒 Instant Access Link
+            </h1>
+            <p style="font-size: 15px; line-height: 24px; color: #a1a1aa; margin-bottom: 32px;">
+              We received a request to log in to your account. Click the button below to sign in instantly. This link is valid for <strong>5 minutes</strong>.
+            </p>
 
-      <div style="text-align: center; margin: 24px 0;">
-        <a href="${process.env.FRONTEND_URL}/magic-login/${token}"
-           style="background-color: #4f46e5; color: white; padding: 12px 24px; font-size: 16px; font-weight: 500; text-decoration: none; border-radius: 8px; display: inline-block;">
-          🔓 Login Now
-        </a>
-      </div>
+            <!-- CTA Button -->
+            <div style="margin: 32px 0;">
+              <a href="${magicLoginLink}"
+                 style="background-color: #ffffff; color: #000000; padding: 14px 32px; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 10px; display: inline-block; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1); transition: all 0.2s ease;">
+                Sign In to CodeWinz
+              </a>
+            </div>
 
-      <p style="font-size: 14px; color: #6b7280;">
-        If you didn’t request this, you can safely ignore this email.
-      </p>
+            <!-- Footer Details -->
+            <p style="font-size: 13px; color: #71717a; margin-top: 32px; border-top: 1px solid #1f1f23; padding-top: 24px;">
+              If you didn’t request this email, you can safely ignore it.
+            </p>
+            <div style="margin-top: 24px; font-size: 11px; color: #52525b;">
+              © ${new Date().getFullYear()} CODEWINZ. All rights reserved.
+            </div>
+          </div>
+        </div>
+      `
+    });
 
-      <div style="margin-top: 32px; text-align: center; font-size: 12px; color: #9ca3af;">
-        © ${new Date().getFullYear()} CODEWINZ. All rights reserved.
-      </div>
-    </div>
-  `
-});
+    console.log("Magic link email sent successfully:", info.messageId);
+    return res.status(200).json({ message: "Magic link sent successfully!" });
 
-
-  console.log("Message sent:", info.messageId);
-})();
-
+  } catch (err) {
+    console.error("Error sending magic link email:", err);
+    return res.status(500).json({
+      message: err.message,
+    });
   }
-catch(err){
-  res.status(500).json({
-    message:err.message,
-  })
-}
-
-
 }
 const verifyMail=async(req,res)=>{
   try{
