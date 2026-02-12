@@ -15,10 +15,15 @@ const problemschema=new Schema({
         required:true,
         enum:['easy','medium','hard'],
     },
-    tags:{
-        type:String,
-        required:true,
-        enum:['array','linkedlist','graph','dp','string','stack','queue','tree','bst'],
+    tags: {
+        type: [String],
+        required: true,
+        validate: {
+            validator: function(v) {
+                return Array.isArray(v) && v.length > 0;
+            },
+            message: 'Problem must have at least one tag.'
+        }
     },
     visibleTestCases:[
        { input:{
