@@ -97,7 +97,7 @@ const AdminDelete = () => {
                 </td>
                 <td>
                   <span className="badge badge-outline">
-                    {problem.tags}
+                    {Array.isArray(problem.tags) ? problem.tags.join(', ') : problem.tags}
                   </span>
                 </td>
                 <td>
