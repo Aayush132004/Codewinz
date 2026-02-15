@@ -38,44 +38,44 @@ function App() {
  //a loader 
  if(loading)
  {
-return (
-  <div className="min-h-screen w-full bg-gradient-to-br from-[#0f172a] to-[#1e293b] flex flex-col items-center justify-center text-white font-mono relative overflow-hidden">
-    
-    {/* Glowing CodeWinz Text */}
-    <div className="z-10 flex flex-col items-center text-center mb-12">
-      <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 animate-pulse drop-shadow-lg">
-        CodeWinz
-      </h1>
-      <p className="mt-4 text-blue-200 text-lg animate-fade-in tracking-wider">
-        Booting your coding battlefield...
-      </p>
-    </div>
+ return (
+   <div className="min-h-screen w-full bg-[#060608] flex flex-col items-center justify-center text-white font-mono relative overflow-hidden">
+     
+     {/* Glowing CodeWinz Text */}
+     <div className="z-10 flex flex-col items-center text-center mb-12">
+       <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400 animate-pulse drop-shadow-lg">
+         CodeWinz
+       </h1>
+       <p className="mt-4 text-zinc-500 text-lg animate-fade-in tracking-wider">
+         Booting your coding battlefield...
+       </p>
+     </div>
 
-    {/* Large Green Rotating Loader Circle */}
-    <div className="w-32 h-32 border-8 border-green-600 border-t-transparent rounded-full animate-spin-smooth opacity-40"></div>
+     {/* Large Neutral Rotating Loader Circle */}
+     <div className="w-32 h-32 border-8 border-zinc-800 border-t-zinc-400 rounded-full animate-spin-smooth opacity-60"></div>
 
-    {/* Custom Animation */}
-    <style>
-      {`
-        @keyframes spin-smooth {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        .animate-spin-smooth {
-          animation: spin-smooth 2s linear infinite;
-        }
+     {/* Custom Animation */}
+     <style>
+       {`
+         @keyframes spin-smooth {
+           0% { transform: rotate(0deg); }
+           100% { transform: rotate(360deg); }
+         }
+         .animate-spin-smooth {
+           animation: spin-smooth 2s linear infinite;
+         }
 
-        @keyframes fade-in {
-          0% { opacity: 0; transform: translateY(10px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 1.5s ease-in-out infinite alternate;
-        }
-      `}
-    </style>
-  </div>
-);
+         @keyframes fade-in {
+           0% { opacity: 0; transform: translateY(10px); }
+           100% { opacity: 1; transform: translateY(0); }
+         }
+         .animate-fade-in {
+           animation: fade-in 1.5s ease-in-out infinite alternate;
+         }
+       `}
+     </style>
+   </div>
+ );
 
 
 
