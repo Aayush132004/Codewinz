@@ -65,7 +65,7 @@ function AnimatedInput({
       <div className={`relative transition-all duration-500 rounded-2xl ${isFocused ? 'scale-[1.02]' : ''}`}>
         
         {/* Animated background glow */}
-        <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 transition-opacity duration-500 ${isFocused ? 'opacity-100' : ''}`} />
+        <div className={`absolute inset-0 rounded-2xl bg-zinc-800/20 opacity-0 transition-opacity duration-500 ${isFocused ? 'opacity-100' : ''}`} />
 
         {/* The main input container with relative positioning for elements */}
         <div className="relative z-10">
@@ -73,15 +73,15 @@ function AnimatedInput({
           {/* Floating label - Fixed positioning with better transition */}
           <label className={`absolute transition-all duration-300 ease-in-out pointer-events-none z-20 transform-gpu ${
             labelUp
-              ? 'top-2 text-xs text-blue-400 font-semibold translate-y-0 scale-100'
-              : 'top-1/2 text-base -translate-y-1/2 text-gray-400 scale-100'
+              ? 'top-2 text-xs text-zinc-300 font-semibold translate-y-0 scale-100'
+              : 'top-1/2 text-base -translate-y-1/2 text-gray-500 scale-100'
           } ${icon ? (labelUp ? 'left-4' : 'left-12') : 'left-4'}`}>
             {label}
           </label>
           
           {/* Icon, positioned to the left */}
           {icon && (
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 z-20">
+            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 z-20">
               {icon}
             </div>
           )}
@@ -94,12 +94,12 @@ function AnimatedInput({
             placeholder={isFocused ? placeholder : ''}
             className={`w-full ${icon ? 'pl-12' : 'pl-4'} ${showPasswordToggle ? 'pr-12' : 'pr-4'} ${
               labelUp ? 'pt-8 pb-2' : 'pt-6 pb-2'
-            } bg-slate-800/50 border-2 rounded-2xl transition-all duration-300 text-white placeholder-gray-500 backdrop-blur-sm focus:outline-none relative z-10 ${
+            } bg-[#0e0e11] border-2 rounded-2xl transition-all duration-300 text-white placeholder-zinc-600 backdrop-blur-sm focus:outline-none relative z-10 ${
               error
-                ? 'border-red-500/50 focus:border-red-400'
+                ? 'border-red-500/30 focus:border-red-500/50'
                 : isFocused
-                  ? 'border-blue-500/50 focus:border-blue-400'
-                  : 'border-slate-600/30 hover:border-slate-500/50'
+                  ? 'border-zinc-500/50 focus:border-zinc-400'
+                  : 'border-zinc-800 hover:border-zinc-700'
             }`}
             onFocus={handleFocus}
             onBlur={handleBlur}
@@ -119,7 +119,7 @@ function AnimatedInput({
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400 transition-colors duration-200 z-20"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors duration-200 z-20"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -127,7 +127,7 @@ function AnimatedInput({
         </div>
         
         {/* Animated border */}
-        <div className={`absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 transition-opacity duration-300 ${isFocused ? 'opacity-100' : ''}`} style={{ mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', maskComposite: 'xor' }} />
+        <div className={`absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-zinc-700 via-zinc-500 to-zinc-700 opacity-0 transition-opacity duration-300 ${isFocused ? 'opacity-100' : ''}`} style={{ mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)', maskComposite: 'xor' }} />
       </div>
       
       {/* Error message */}
