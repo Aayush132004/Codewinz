@@ -9,7 +9,7 @@ const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
-  tags: z.enum(['array','linkedlist','graph','dp','string','stack','queue','tree','bst']),
+  tags: z.array(z.string()).min(1, 'At least one tag is required'),
   visibleTestCases: z.array(
     z.object({
       input: z.string().min(1, 'Input is required'),
@@ -47,6 +47,7 @@ function Admincreate() {
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
+      tags: [],
       startCode: [
         { language: 'c++', initialCode: '' },
         { language: 'java', initialCode: '' },
@@ -137,20 +138,21 @@ return (
             </div>
 
             <div className="form-control w-full">
-              <label className="label font-semibold">Tag</label>
-              <select {...register('tags')} className={`select select-bordered ${errors.tags && 'select-error'}`}>
-                <option value="">Select a tag</option>
-                <option value="array">Array</option>
-                <option value="linkedList">Linked List</option>
-                <option value="graph">Graph</option>
-                <option value="tree">Tree</option>
-                <option value="string">String</option>
-                <option value="dp">Dynamic Programming</option>
-                <option value="stack">Dynamic Programming</option>
-                <option value="queue">Dynamic Programming</option>
-                 <option value="bst">Dynamic Programming</option>
-              </select>
-              {errors.tags && <p className="text-error text-sm">{errors.tags.message}</p>}
+              <label className="label font-semibold">Tags</label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 bg-base-200 p-4 rounded-xl border border-base-300">
+                {['array', 'linkedlist', 'graph', 'dp', 'string', 'stack', 'queue', 'tree', 'bst'].map((tag) => (
+                  <label key={tag} className="flex items-center space-x-3 cursor-pointer hover:bg-white/5 p-1 rounded transition-colors">
+                    <input
+                      type="checkbox"
+                      value={tag}
+                      className="checkbox checkbox-sm checkbox-primary"
+                      {...register('tags')}
+                    />
+                    <span className="text-sm capitalize">{tag === 'dp' ? 'DP' : tag === 'bst' ? 'BST' : tag}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.tags && <p className="text-error text-sm mt-1">{errors.tags.message}</p>}
             </div>
           </div>
         </div>
@@ -162,8 +164,13 @@ return (
 
         {/* Visible */}
         <div className="space-y-4 mb-8">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Visible Test Cases</h3>
+          <div className="flex justify-between items-start md:items-center">
+            <div>
+              <h3 className="text-lg font-medium">Visible Test Cases</h3>
+              <p className="text-xs text-gray-500 mt-1 max-w-xl">
+                Note: Inputs are fed directly to your solution's standard input (stdin). For multiple inputs (like an array and a target <code className="bg-base-200 px-1 rounded">k</code>), enter them sequentially separated by spaces or newlines, exactly in the order your boiler/runner code reads them (e.g. write array size, target, then array elements on a new line).
+              </p>
+            </div>
             <button type="button" onClick={() => appendVisible({ input: '', output: '', explanation: '' })} className="btn btn-sm btn-outline">
               + Add
             </button>
@@ -184,8 +191,13 @@ return (
 
         {/* Hidden */}
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Hidden Test Cases</h3>
+          <div className="flex justify-between items-start md:items-center">
+            <div>
+              <h3 className="text-lg font-medium">Hidden Test Cases</h3>
+              <p className="text-xs text-gray-500 mt-1 max-w-xl">
+                Note: These test cases will run silently during submission evaluation. Ensure their input format matches the visible test cases format.
+              </p>
+            </div>
             <button type="button" onClick={() => appendHidden({ input: '', output: '' })} className="btn btn-sm btn-outline">
               + Add
             </button>
