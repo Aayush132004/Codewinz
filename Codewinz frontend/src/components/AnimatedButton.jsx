@@ -13,12 +13,12 @@ function AnimatedButton({
 }) {
   const [isPressed, setIsPressed] = useState(false);
 
-  const baseClasses = 'relative overflow-hidden font-bold transition-all duration-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95';
+  const baseClasses = 'relative overflow-hidden font-bold transition-all duration-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-zinc-700/30 disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95';
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 text-white hover:from-blue-500 hover:via-purple-500 hover:to-blue-500 shadow-lg hover:shadow-blue-500/30',
-    secondary: 'bg-gradient-to-r from-slate-700 to-slate-600 text-white hover:from-slate-600 hover:to-slate-500',
-    outline: 'border-2 border-blue-500/50 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400'
+    primary: 'bg-white text-black hover:bg-zinc-200 shadow-md transition-all duration-300',
+    secondary: 'bg-gradient-to-r from-zinc-800 to-zinc-700 text-white hover:from-zinc-700 hover:to-zinc-600 border border-zinc-700/50',
+    outline: 'border-2 border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white hover:border-zinc-500'
   };
   
   const sizeClasses = {
