@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import axiosClient from "../../utils/axiosClient";
 import Submissionhistory from '../components/Submissionhistory';
 import ChatAi from '../components/ChatAi';
+import Navbar from './Navbar';
 
 const supportedLanguages = [
     { id: 'javascript', name: 'JavaScript' },
@@ -62,9 +63,8 @@ function CollaborativeEditor() {
             const user = {
                 id: reduxUser._id,
                 firstName: reduxUser.firstName || 'User',
-                imageUrl: reduxUser.profile?.url || null,
+                imageUrl: reduxUser.profile?.url || `https://api.dicebear.com/7.x/identicon/svg?seed=${reduxUser.firstName || reduxUser._id}`,
             };
-            // console.log('Logged in user from Redux:', user);
             currentUserRef.current = user;
             return user;
         }
@@ -75,10 +75,9 @@ function CollaborativeEditor() {
         }
         const user = {
             id: anonId,
-            firstName: `Guest${anonId.substring(5, 9)}`, // More descriptive anonymous name
-            imageUrl: null,
+            firstName: `Guest${anonId.substring(5, 9)}`,
+            imageUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${anonId}`,
         };
-        // console.log('Anonymous user created:', user);
         currentUserRef.current = user;
         return user;
     }, [reduxUser]);
@@ -248,11 +247,9 @@ function CollaborativeEditor() {
                     })));
                 }
 
-                // Initialize Socket.IO connection
-                // const SOCKET_SERVER_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-                // console.log('Connecting to socket with user:', currentUser);
-                
-                const newSocket = io(import.meta.env.SOCKET_SERVER_URL, {
+                const socketUrl = import.meta.env.VITE_SOCKET_SERVER_URL || import.meta.env.SOCKET_SERVER_URL || 'http://localhost:3000';
+                const namespaceUrl = socketUrl.endsWith('/') ? `${socketUrl}code` : `${socketUrl}/code`;
+                const newSocket = io(namespaceUrl, {
                     withCredentials: true,
                     path:"/socket.io",
                     transports:["websocket","polling"],
@@ -365,11 +362,27 @@ function CollaborativeEditor() {
                     if (!isMounted) return;
                     console.log('Received code change from socket:', newCode);
                     if (editorRef.current && newCode !== codeRef.current) {
-                        ignoreChangeRef.current = true;
-                        setCode(newCode);
-                        codeRef.current = newCode;
-                        editorRef.current.setValue(newCode);
-                        ignoreChangeRef.current = false;
+                        const editor = editorRef.current;
+                        const model = editor.getModel();
+                        if (model) {
+                            // Preserve cursor position and scroll state
+                            const viewState = editor.saveViewState();
+                            ignoreChangeRef.current = true;
+                            model.pushEditOperations(
+                                [],
+                                [{
+                                    range: model.getFullModelRange(),
+                                    text: newCode
+                                }],
+                                () => null
+                            );
+                            if (viewState) {
+                                editor.restoreViewState(viewState);
+                            }
+                            setCode(newCode);
+                            codeRef.current = newCode;
+                            ignoreChangeRef.current = false;
+                        }
                     }
                 });
 
@@ -837,18 +850,20 @@ function CollaborativeEditor() {
     }
     
     return (
-        <div className="h-screen flex bg-gradient-to-br from-[#0f172a] via-[#1e253b] to-[#1e293b] text-base-content overflow-hidden">
-            {/* Left Panel */}
-            <div className="flex flex-col border-r border-base-300 bg-white/5 backdrop-blur-md shadow-inner" style={{ width: `${leftPanelWidth}%` }}>
-                <div className="tabs tabs-lifted px-6 py-3 border-b border-base-300 flex justify-between items-center">
+        <div className="h-screen flex flex-col bg-[#060608] text-gray-200">
+            <Navbar />
+            <div className="flex-1 flex pt-16 overflow-hidden">
+                {/* Left Panel */}
+                <div className="flex flex-col border-r border-[#1c1c22] bg-[#101012] shadow-inner" style={{ width: `${leftPanelWidth}%` }}>
+                    <div className="tabs tabs-lifted px-6 py-3 border-b border-[#1c1c22] bg-[#0e0e11] flex justify-between items-center">
                     <div className="flex">
                         {['description', 'submissions', 'chatAI', 'testcase', 'result'].map((tab) => (
                             <button 
                                 key={tab} 
-                                className={`tab transition duration-200 ease-in-out text-md tracking-wide font-medium px-4 ${
+                                className={`tab transition duration-200 ease-in-out text-md tracking-wide font-medium px-4 cursor-pointer ${
                                     activeLeftTab === tab 
-                                        ? 'tab-active text-primary border-b-2 border-primary' 
-                                        : 'hover:text-primary/80'
+                                        ? 'tab-active text-white border-b-2 border-white font-semibold' 
+                                        : 'text-gray-400 hover:text-white/80'
                                 }`}
                                 onClick={() => setActiveLeftTab(tab)}
                             >
@@ -879,9 +894,19 @@ function CollaborativeEditor() {
                                 <div className={`badge badge-outline px-3 py-1 text-sm ${getDifficultyColor(problemDetails.difficulty)}`}>
                                     {problemDetails.difficulty}
                                 </div>
-                                <div className="badge badge-secondary px-3 py-1 text-sm">
-                                    {problemDetails.tags}
-                                </div>
+                                {Array.isArray(problemDetails.tags) ? (
+                                    problemDetails.tags.map((tag, idx) => (
+                                        <div key={idx} className="badge badge-secondary px-3 py-1 text-sm capitalize">
+                                            {tag === 'dp' ? 'DP' : tag === 'bst' ? 'BST' : tag}
+                                        </div>
+                                    ))
+                                ) : (
+                                    problemDetails.tags && (
+                                        <div className="badge badge-secondary px-3 py-1 text-sm capitalize">
+                                            {problemDetails.tags === 'dp' ? 'DP' : problemDetails.tags === 'bst' ? 'BST' : problemDetails.tags}
+                                        </div>
+                                    )
+                                )}
                             </div>
                             <div className="prose prose-sm max-w-none prose-p:text-base-content/80 whitespace-pre-wrap leading-relaxed text-gray-300">
                                 {problemDetails.description}
@@ -891,25 +916,25 @@ function CollaborativeEditor() {
                                     <h3 className="text-lg font-semibold mb-3 text-white">Examples:</h3>
                                     <div className="grid gap-4">
                                         {problemDetails.visibleTestCases.map((example, index) => (
-                                            <div key={index} className="rounded-xl bg-base-200/60 p-5 border border-base-300 shadow-sm">
+                                            <div key={index} className="rounded-xl bg-[#16161a] p-5 border border-[#222226] shadow-sm">
                                                 <h4 className="font-semibold text-white mb-2">Example {index + 1}:</h4>
                                                 <div className="space-y-1 font-mono text-xs">
                                                     <div>
                                                         <strong>Input:</strong> 
-                                                        <pre className="inline bg-gray-800 p-1 rounded text-xs text-gray-300 ml-2">
+                                                        <pre className="inline bg-[#0e0e11] text-gray-300 border border-[#1e1e24] p-1 rounded text-xs ml-2">
                                                             {example.input}
                                                         </pre>
                                                     </div>
                                                     <div>
                                                         <strong>Output:</strong> 
-                                                        <pre className="inline bg-gray-800 p-1 rounded text-xs text-gray-300 ml-2">
+                                                        <pre className="inline bg-[#0e0e11] text-gray-300 border border-[#1e1e24] p-1 rounded text-xs text-gray-300 ml-2">
                                                             {example.output}
                                                         </pre>
                                                     </div>
                                                     {example.explanation && (
                                                         <div>
                                                             <strong>Explanation:</strong> 
-                                                            <pre className="inline bg-gray-800 p-1 rounded text-xs text-gray-300 ml-2">
+                                                            <pre className="inline bg-[#0e0e11] text-gray-300 border border-[#1e1e24] p-1 rounded text-xs text-gray-300 ml-2">
                                                                 {example.explanation}
                                                             </pre>
                                                         </div>
@@ -951,22 +976,22 @@ function CollaborativeEditor() {
 
             {/* Resizer */}
             <div 
-                className="w-2 bg-gray-700 cursor-ew-resize hover:bg-blue-500 transition-colors duration-100 flex items-center justify-center" 
+                className="w-2 bg-[#1c1c22] cursor-ew-resize hover:bg-slate-700 transition-colors duration-100 flex items-center justify-center" 
                 onMouseDown={handleMouseDown}
             >
-                <div className="w-1 h-8 bg-gray-500 rounded-full"></div>
+                <div className="w-1 h-8 bg-slate-600 rounded-full"></div>
             </div>
 
             {/* Right Panel - Code Editor */}
-            <div className="flex flex-col bg-base-100" style={{ width: `${100 - leftPanelWidth}%` }}>
+            <div className="flex flex-col bg-[#101012]" style={{ width: `${100 - leftPanelWidth}%` }}>
                 <div className="flex-1 flex flex-col">
                     {/* Header */}
-                    <div className="flex justify-between items-center p-4 bg-base-100 border-b border-base-300">
+                    <div className="flex justify-between items-center p-4 bg-[#0e0e11] border-b border-[#1c1c22]">
                         <div className="flex gap-4 items-center w-full justify-between">
                             {/* Language Selector */}
                             <div className="relative">
                                 <select 
-                                    className="select select-sm bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                                    className="select select-sm bg-[#141416] text-white border-[#222226] focus:outline-none focus:ring-1 focus:ring-slate-700 rounded-full hover:bg-[#1a1a1f] transition-all"
                                     value={language} 
                                     onChange={handleLanguageChange} 
                                     disabled={!isHost} 
@@ -996,19 +1021,13 @@ function CollaborativeEditor() {
                                                 {collaborators.map((collaborator) => (
                                                     <li key={collaborator.id}>
                                                         <div className="flex items-center gap-2 py-1">
-                                                            <div className="avatar placeholder">
-                                                                <div className="bg-neutral-focus text-neutral-content rounded-full w-6 h-6 flex items-center justify-center">
-                                                                    {collaborator.imageUrl ? (
-                                                                        <img 
-                                                                            src={collaborator.imageUrl} 
-                                                                            alt={collaborator.firstName} 
-                                                                            className="rounded-full" 
-                                                                        />
-                                                                    ) : (
-                                                                        <span className="text-xs">
-                                                                            {collaborator.firstName?.charAt(0)?.toUpperCase()}
-                                                                        </span>
-                                                                    )}
+                                                            <div className="avatar">
+                                                                <div className="rounded-full w-6 h-6 flex items-center justify-center bg-neutral-focus">
+                                                                    <img 
+                                                                        src={collaborator.imageUrl || `https://api.dicebear.com/7.x/bottts/svg?seed=${collaborator.id}`} 
+                                                                        alt={collaborator.firstName} 
+                                                                        className="rounded-full w-full h-full object-cover" 
+                                                                    />
                                                                 </div>
                                                             </div>
                                                             <span className="text-sm">{collaborator.firstName}</span>
@@ -1041,7 +1060,7 @@ function CollaborativeEditor() {
                             {/* Theme Selector */}
                             <div className="relative">
                                 <select 
-                                    className="select select-sm bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                                    className="select select-sm bg-[#141416] text-white border-[#222226] focus:outline-none focus:ring-1 focus:ring-slate-700 rounded-full hover:bg-[#1a1a1f] transition-all"
                                     value={selectedTheme} 
                                     onChange={handleThemeChange}
                                 >
@@ -1056,7 +1075,7 @@ function CollaborativeEditor() {
                     </div>
 
                     {/* Code Editor */}
-                    <div className="flex-1 rounded-2xl border border-[#2c3e50] bg-[#0f172a] shadow-md overflow-hidden mx-4 mb-4">
+                    <div className="flex-1 border border-[#1c1c22] bg-[#0e0e11] shadow-md overflow-hidden mx-4 mb-4 rounded-xl">
                         <Editor 
                             height="100%"
                             language={getLanguageForMonaco(language)}
@@ -1088,7 +1107,7 @@ function CollaborativeEditor() {
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="bg-base-100 border-t border-base-300 flex justify-between items-center p-4">
+                    <div className="bg-[#0e0e11] border-t border-[#1c1c22] flex justify-between items-center p-4">
                         <div className="flex items-center gap-2 text-sm text-gray-400">
                             <Code size={16} />
                             <span>Current: {supportedLanguages.find(l => l.id === language)?.name}</span>
@@ -1098,7 +1117,7 @@ function CollaborativeEditor() {
                             <button 
                                 className={`btn btn-outline btn-sm ${
                                     isRunning ? 'opacity-70 cursor-not-allowed' : ''
-                                } border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white transition-all duration-200`}
+                                } border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200`}
                                 onClick={handleRun} 
                                 disabled={isRunning}
                             >
@@ -1110,9 +1129,9 @@ function CollaborativeEditor() {
                                 Run
                             </button>
                             <button 
-                                className={`btn btn-primary btn-sm ${
+                                className={`btn btn-sm ${
                                     isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
-                                } bg-green-600 border-green-600 text-white hover:bg-green-700 hover:border-green-700 shadow-lg transition-all duration-200`}
+                                } bg-[#222226] border-0 text-white hover:bg-[#2e2e34] shadow-lg transition-all duration-200`}
                                 onClick={handleSubmitCode} 
                                 disabled={isSubmitting || !isHost} 
                                 title={!isHost ? "Only the session host can submit" : ""}
@@ -1156,6 +1175,7 @@ function CollaborativeEditor() {
                     background: rgba(255, 255, 255, 0.5);
                 }
             `}</style>
+            </div>
         </div>
     );
 }
