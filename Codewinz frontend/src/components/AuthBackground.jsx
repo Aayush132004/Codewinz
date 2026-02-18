@@ -39,7 +39,7 @@ function AuthBackground() {
       vy: (Math.random() - 0.5) * 0.3,
       size: Math.random() * 1.5 + 0.5,
       opacity: Math.random() * 0.4 + 0.1,
-      hue: Math.random() * 60 + 200 // Blue to purple range
+      hue: 0 // Grey range
     }));
 
     const handleMouseMove = (e) => {
@@ -59,14 +59,14 @@ function AuthBackground() {
         dimensions.width / 2, dimensions.height / 2, 0,
         dimensions.width / 2, dimensions.height / 2, Math.max(dimensions.width, dimensions.height)
       );
-      gradient.addColorStop(0, 'rgba(15, 23, 42, 0.95)');
-      gradient.addColorStop(0.5, 'rgba(30, 41, 59, 0.9)');
-      gradient.addColorStop(1, 'rgba(15, 23, 42, 0.95)');
+      gradient.addColorStop(0, 'rgba(6, 6, 8, 0.98)');
+      gradient.addColorStop(0.5, 'rgba(16, 16, 18, 0.95)');
+      gradient.addColorStop(1, 'rgba(6, 6, 8, 0.98)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 
       // Draw subtle geometric patterns
-      ctx.strokeStyle = 'rgba(59, 130, 246, 0.08)';
+      ctx.strokeStyle = 'rgba(180, 180, 185, 0.03)';
       ctx.lineWidth = 1;
       const gridSize = 120;
       
@@ -119,7 +119,7 @@ function AuthBackground() {
         // Draw particle
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${particle.hue}, 70%, 60%, ${particle.opacity})`;
+        ctx.fillStyle = `rgba(180, 180, 185, ${particle.opacity})`;
         ctx.fill();
 
         // Draw connections
@@ -130,11 +130,11 @@ function AuthBackground() {
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 80) {
-            const opacity = (80 - distance) / 80 * 0.15;
+            const opacity = (80 - distance) / 80 * 0.1;
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${opacity})`;
+            ctx.strokeStyle = `rgba(180, 180, 185, ${opacity})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -142,7 +142,7 @@ function AuthBackground() {
       });
 
       // Draw flowing energy lines
-      ctx.strokeStyle = 'rgba(59, 130, 246, 0.08)';
+      ctx.strokeStyle = 'rgba(180, 180, 185, 0.03)';
       ctx.lineWidth = 2;
       for (let i = 0; i < 2; i++) {
         ctx.beginPath();
@@ -176,7 +176,7 @@ function AuthBackground() {
       ref={canvasRef}
       className="fixed inset-0 z-0 pointer-events-none"
       style={{
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)'
+        background: 'linear-gradient(135deg, #060608 0%, #101012 50%, #060608 100%)'
       }}
     />
   );
