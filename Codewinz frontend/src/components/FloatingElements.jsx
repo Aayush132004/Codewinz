@@ -14,12 +14,12 @@ function FloatingElements() {
   }, []);
 
   const elements = [
-    { Icon: Code, size: 24, color: 'text-blue-400', delay: 0 },
-    { Icon: Zap, size: 20, color: 'text-yellow-400', delay: 0.5 },
-    { Icon: Trophy, size: 28, color: 'text-orange-400', delay: 1 },
-    { Icon: Star, size: 16, color: 'text-purple-400', delay: 1.5 },
-    { Icon: Target, size: 22, color: 'text-green-400', delay: 2 },
-    { Icon: Sparkles, size: 18, color: 'text-pink-400', delay: 2.5 }
+    { Icon: Code, size: 24, color: 'text-slate-500', delay: 0 },
+    { Icon: Zap, size: 20, color: 'text-slate-600', delay: 0.5 },
+    { Icon: Trophy, size: 28, color: 'text-slate-500', delay: 1 },
+    { Icon: Star, size: 16, color: 'text-slate-600', delay: 1.5 },
+    { Icon: Target, size: 22, color: 'text-slate-500', delay: 2 },
+    { Icon: Sparkles, size: 18, color: 'text-slate-600', delay: 2.5 }
   ];
 
   return (
