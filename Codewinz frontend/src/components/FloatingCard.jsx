@@ -55,7 +55,7 @@ function FloatingCard({ children, className = '' }) {
           isHovered ? 'opacity-100' : ''
         }`}
         style={{
-          background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.3), transparent 70%)',
+          background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.05), transparent 70%)',
           filter: 'blur(20px)',
           transform: 'scale(1.1)'
         }}
@@ -63,14 +63,14 @@ function FloatingCard({ children, className = '' }) {
       
       {/* Card content */}
       <div
-        className="relative z-10 bg-gradient-to-br from-slate-900/90 to-slate-800/50 backdrop-blur-xl rounded-3xl border border-slate-700/50 hover:border-slate-600/70 transition-all duration-500 shadow-2xl"
+        className="relative z-10 bg-gradient-to-br from-[#0f0f11] to-[#161619] backdrop-blur-xl rounded-3xl border border-zinc-800 hover:border-zinc-700 transition-all duration-500 shadow-2xl"
         style={{ transform: 'translateZ(0)' }}
       >
         {children}
         
         {/* Reflection effect */}
         <div
-          className={`absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 pointer-events-none ${
+          className={`absolute inset-0 rounded-3xl bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-0 transition-opacity duration-500 pointer-events-none ${
             isHovered ? 'opacity-100' : ''
           }`}
         />
@@ -82,7 +82,7 @@ function FloatingCard({ children, className = '' }) {
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-blue-400 rounded-full animate-ping"
+              className="absolute w-1 h-1 bg-zinc-600 rounded-full animate-ping"
               style={{
                 left: `${20 + i * 15}%`,
                 top: `${30 + (i % 2) * 40}%`,
