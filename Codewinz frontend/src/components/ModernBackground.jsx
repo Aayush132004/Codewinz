@@ -31,15 +31,15 @@ function ModernBackground() {
     canvas.height = dimensions.height;
 
     // Initialize particles
-    const particleCount = Math.min(150, Math.floor(dimensions.width / 8));
+    const particleCount = Math.min(100, Math.floor(dimensions.width / 12));
     particlesRef.current = Array.from({ length: particleCount }, () => ({
       x: Math.random() * dimensions.width,
       y: Math.random() * dimensions.height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      size: Math.random() * 2 + 1,
-      opacity: Math.random() * 0.5 + 0.1,
-      hue: Math.random() * 60 + 200 // Blue to purple range
+      vx: (Math.random() - 0.5) * 0.25, // slower movement for professional look
+      vy: (Math.random() - 0.5) * 0.25,
+      size: Math.random() * 1.5 + 0.5, // slightly smaller particles
+      opacity: Math.random() * 0.4 + 0.1,
+      hue: 0
     }));
 
     const handleMouseMove = (e) => {
@@ -51,20 +51,20 @@ function ModernBackground() {
 
     let time = 0;
     const animate = () => {
-      time += 0.01;
+      time += 0.005; // slower animation
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
-      // Create gradient background
+      // Create gradient background (Professional LeetCode-style deep blackish grey)
       const gradient = ctx.createLinearGradient(0, 0, dimensions.width, dimensions.height);
-      gradient.addColorStop(0, 'rgba(15, 15, 35, 0.95)');
-      gradient.addColorStop(0.5, 'rgba(26, 26, 46, 0.95)');
-      gradient.addColorStop(1, 'rgba(22, 33, 62, 0.95)');
+      gradient.addColorStop(0, 'rgba(10, 10, 12, 0.99)');
+      gradient.addColorStop(0.5, 'rgba(15, 15, 17, 0.99)');
+      gradient.addColorStop(1, 'rgba(20, 20, 22, 0.99)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 
-      // Draw geometric grid
-      ctx.strokeStyle = 'rgba(100, 255, 218, 0.1)';
-      ctx.lineWidth = 1;
+      // Draw geometric grid (very subtle gray lines)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+      ctx.lineWidth = 0.5;
       const gridSize = 100;
       
       for (let x = 0; x < dimensions.width; x += gridSize) {
@@ -90,8 +90,8 @@ function ModernBackground() {
         
         if (distance < 150) {
           const force = (150 - distance) / 150;
-          particle.vx -= (dx / distance) * force * 0.01;
-          particle.vy -= (dy / distance) * force * 0.01;
+          particle.vx -= (dx / distance) * force * 0.005;
+          particle.vy -= (dy / distance) * force * 0.005;
         }
 
         // Update position
@@ -111,15 +111,15 @@ function ModernBackground() {
         particle.vy *= 0.99;
 
         // Pulsing opacity
-        particle.opacity = 0.3 + Math.sin(time + i * 0.1) * 0.2;
+        particle.opacity = 0.15 + Math.sin(time + i * 0.1) * 0.1;
 
-        // Draw particle
+        // Draw particle (Soft white/grey nodes)
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${particle.hue}, 70%, 60%, ${particle.opacity})`;
+        ctx.fillStyle = `rgba(200, 200, 200, ${particle.opacity})`;
         ctx.fill();
 
-        // Draw connections
+        // Draw connections (subtle grey lines)
         particlesRef.current.forEach((otherParticle, j) => {
           if (i >= j) return;
           const dx = particle.x - otherParticle.x;
@@ -127,25 +127,25 @@ function ModernBackground() {
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 120) {
-            const opacity = (120 - distance) / 120 * 0.2;
+            const opacity = (120 - distance) / 120 * 0.12;
             ctx.beginPath();
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.strokeStyle = `rgba(100, 255, 218, ${opacity})`;
+            ctx.strokeStyle = `rgba(180, 180, 180, ${opacity})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         });
       });
 
-      // Draw flowing lines
-      ctx.strokeStyle = 'rgba(100, 255, 218, 0.1)';
-      ctx.lineWidth = 2;
-      for (let i = 0; i < 3; i++) {
+      // Draw flowing background lines (very subtle)
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.008)';
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 2; i++) {
         ctx.beginPath();
-        const y = dimensions.height * 0.2 + i * dimensions.height * 0.3;
+        const y = dimensions.height * 0.3 + i * dimensions.height * 0.4;
         for (let x = 0; x < dimensions.width; x += 20) {
-          const wave = Math.sin((x + time * 50) * 0.01 + i) * 30;
+          const wave = Math.sin((x + time * 30) * 0.008 + i) * 20;
           if (x === 0) {
             ctx.moveTo(x, y + wave);
           } else {
