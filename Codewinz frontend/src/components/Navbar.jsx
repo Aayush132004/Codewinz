@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../authSlice";
-import { Settings, LogOut, User, Shield, ChevronDown, Code2 } from "lucide-react";
+import { Settings, LogOut, User, Shield, ChevronDown } from "lucide-react";
 
 const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -33,8 +33,8 @@ const Navbar = () => {
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled 
-        ? 'bg-slate-900/90 backdrop-blur-xl border-b border-slate-700/30 shadow-lg' 
-        : 'bg-slate-900/70 backdrop-blur-lg'
+        ? 'bg-[#0a0a0c]/90 backdrop-blur-xl border-b border-[#1c1c22] shadow-lg' 
+        : 'bg-[#0a0a0c]/70 backdrop-blur-lg border-b border-[#1c1c22]/30'
     }`}>
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="relative flex items-center justify-between h-16">
@@ -48,11 +48,11 @@ const Navbar = () => {
               {user?.profile && (
                 <img 
                   src="/logo.png" 
-                  className="h-10 w-auto object-contain group-hover:scale-105 transition-transform duration-300" 
+                  className="h-9 w-auto object-contain group-hover:scale-105 transition-transform duration-300" 
                   alt="Logo"
                 />
               )}
-              <span className="text-2xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-xl font-bold text-white tracking-tight hover:text-gray-300 transition-colors">
                 CodeWinz
               </span>
             </div>
@@ -65,10 +65,10 @@ const Navbar = () => {
             {user?.role === 'admin' && (
               <button
                 onClick={() => navigate('/admin')}
-                className="group relative px-6 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-purple-500/30"
+                className="group px-4 py-2 bg-[#1c1c22] hover:bg-[#282830] text-gray-200 text-sm font-medium rounded-lg border border-[#2e2e38] transition-all duration-300 hover:scale-105"
               >
                 <div className="flex items-center space-x-2">
-                  <Shield className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                  <Shield className="w-4 h-4 text-slate-400 group-hover:rotate-12 transition-transform duration-300" />
                   <span>Admin Panel</span>
                 </div>
               </button>
@@ -78,21 +78,20 @@ const Navbar = () => {
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-3 p-3 rounded-xl bg-slate-800/40 hover:bg-slate-700/60 border border-slate-600/30 hover:border-cyan-400/60 transition-all duration-300 group shadow-lg hover:shadow-xl"
+                className="flex items-center space-x-3 p-2 rounded-xl bg-[#141416]/60 hover:bg-[#1c1c22]/80 border border-[#222226] hover:border-[#2e2e34] transition-all duration-300 group shadow-md"
               >
                 <div className="relative">
-                  <div className="w-11 h-11 rounded-full ring-2 ring-cyan-400/60 group-hover:ring-cyan-400 group-hover:ring-4 transition-all duration-300 overflow-hidden">
+                  <div className="w-9 h-9 rounded-full ring-2 ring-[#2e2e38] group-hover:ring-[#3e3e48] transition-all duration-300 overflow-hidden">
                     <img
                       alt="User Avatar"
                       src={user?.profile || '/default-avatar.png'}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-slate-900 rounded-full"></div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 border-2 border-slate-900 rounded-full"></div>
                 </div>
                 <div className="hidden md:block text-left">
                   <div className="text-sm font-semibold text-white">{user?.firstName || 'User'}</div>
-                  <div className="text-xs text-slate-300">{user?.email}</div>
                 </div>
                 <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${
                   isDropdownOpen ? 'rotate-180' : ''
@@ -106,12 +105,12 @@ const Navbar = () => {
                     className="fixed inset-0 z-10" 
                     onClick={() => setIsDropdownOpen(false)}
                   ></div>
-                  <div className="absolute right-0 mt-4 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/40 rounded-2xl shadow-2xl z-20 overflow-hidden">
+                  <div className="absolute right-0 mt-3 w-72 bg-[#0e0e11]/95 backdrop-blur-xl border border-[#1c1c22] rounded-xl shadow-2xl z-20 overflow-hidden">
                     
                     {/* User Info Header */}
-                    <div className="p-5 bg-gradient-to-r from-slate-800 to-slate-700 border-b border-slate-600/40">
+                    <div className="p-4 bg-[#141418] border-b border-[#1c1c22]">
                       <div className="flex items-center space-x-3">
-                        <div className="w-14 h-14 rounded-full ring-2 ring-cyan-400/60 overflow-hidden">
+                        <div className="w-12 h-12 rounded-full ring-2 ring-[#2e2e38] overflow-hidden">
                           <img
                             alt="User Avatar"
                             src={user?.profile || '/default-avatar.png'}
@@ -119,10 +118,10 @@ const Navbar = () => {
                           />
                         </div>
                         <div>
-                          <div className="font-bold text-white text-lg">{user?.firstName || 'User'}</div>
-                          <div className="text-sm text-slate-300">{user?.email}</div>
+                          <div className="font-bold text-white text-base">{user?.firstName || 'User'}</div>
+                          <div className="text-xs text-slate-400 truncate max-w-[180px]">{user?.email}</div>
                           {user?.role && (
-                            <div className="inline-flex items-center px-3 py-1 mt-2 text-xs font-semibold bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-300 rounded-full border border-cyan-400/30">
+                            <div className="inline-flex items-center px-2 py-0.5 mt-1 text-[10px] font-semibold bg-[#222226] text-slate-300 rounded-full border border-[#2e2e34]">
                               {user.role}
                             </div>
                           )}
@@ -131,45 +130,42 @@ const Navbar = () => {
                     </div>
 
                     {/* Menu Items */}
-                    <div className="p-2">
+                    <div className="p-1.5">
                       <button
                         onClick={() => navigateAndClose('/profile')}
-                        className="w-full flex items-center space-x-4 px-4 py-4 text-left hover:bg-slate-700/60 rounded-xl transition-all duration-300 group"
+                        className="w-full flex items-center space-x-3 px-3 py-2.5 text-left hover:bg-[#18181c] rounded-lg transition-all duration-300 group"
                       >
-                        <div className="p-2.5 bg-blue-500/20 rounded-xl group-hover:bg-blue-500/40 transition-all duration-300 group-hover:scale-110">
-                          <User className="w-5 h-5 text-blue-400" />
+                        <div className="p-1.5 bg-[#18181c] rounded-md border border-[#222226] group-hover:bg-[#222228] transition-all duration-300">
+                          <User className="w-4 h-4 text-slate-300" />
                         </div>
                         <div>
-                          <div className="font-semibold text-white">Profile</div>
-                          <div className="text-xs text-slate-400">Manage your account</div>
+                          <div className="text-sm font-medium text-white">Profile</div>
                         </div>
                       </button>
 
                       <button
                         onClick={() => navigateAndClose('/setting')}
-                        className="w-full flex items-center space-x-4 px-4 py-4 text-left hover:bg-slate-700/60 rounded-xl transition-all duration-300 group"
+                        className="w-full flex items-center space-x-3 px-3 py-2.5 text-left hover:bg-[#18181c] rounded-lg transition-all duration-300 group"
                       >
-                        <div className="p-2.5 bg-purple-500/20 rounded-xl group-hover:bg-purple-500/40 transition-all duration-300 group-hover:scale-110">
-                          <Settings className="w-5 h-5 text-purple-400" />
+                        <div className="p-1.5 bg-[#18181c] rounded-md border border-[#222226] group-hover:bg-[#222228] transition-all duration-300">
+                          <Settings className="w-4 h-4 text-slate-300" />
                         </div>
                         <div>
-                          <div className="font-semibold text-white">Settings</div>
-                          <div className="text-xs text-slate-400">Preferences & privacy</div>
+                          <div className="text-sm font-medium text-white">Settings</div>
                         </div>
                       </button>
 
-                      <div className="my-3 border-t border-slate-600/40"></div>
+                      <div className="my-2 border-t border-[#1c1c22]"></div>
 
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center space-x-4 px-4 py-4 text-left hover:bg-red-500/20 rounded-xl transition-all duration-300 group"
+                        className="w-full flex items-center space-x-3 px-3 py-2.5 text-left hover:bg-red-500/10 rounded-lg transition-all duration-300 group"
                       >
-                        <div className="p-2.5 bg-red-500/20 rounded-xl group-hover:bg-red-500/40 transition-all duration-300 group-hover:scale-110">
-                          <LogOut className="w-5 h-5 text-red-400" />
+                        <div className="p-1.5 bg-red-500/10 rounded-md border border-red-500/20 group-hover:bg-red-500/20 transition-all duration-300">
+                          <LogOut className="w-4 h-4 text-red-400" />
                         </div>
                         <div>
-                          <div className="font-semibold text-red-400 group-hover:text-red-300">Logout</div>
-                          <div className="text-xs text-slate-400">Sign out of your account</div>
+                          <div className="text-sm font-medium text-red-400 group-hover:text-red-300">Logout</div>
                         </div>
                       </button>
                     </div>
