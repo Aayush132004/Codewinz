@@ -6,7 +6,7 @@ function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#0f172a] text-gray-400 py-8 mt-auto border-t border-gray-700 z-0">
+    <footer className="bg-[#08080a] text-gray-400 py-8 mt-auto border-t border-[#18181c] z-0">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Company Info */}
         <div className="col-span-1">
@@ -50,8 +50,8 @@ function Footer() {
           {/* Optional: Newsletter Signup */}
           <div className="mt-4">
             <h4 className="text-md font-semibold text-white mb-2">Stay Updated</h4>
-            <input type="email" placeholder="Your email" className="input input-bordered input-sm w-full bg-gray-800 border-gray-700 text-white placeholder-gray-500" />
-            <button className="btn btn-primary btn-sm w-full mt-2 bg-blue-600 hover:bg-blue-700 border-0">Subscribe</button>
+            <input type="email" placeholder="Your email" className="input input-bordered input-sm w-full bg-[#141416] border-[#222226] text-white placeholder-gray-600" />
+            <button className="btn btn-sm w-full mt-2 bg-[#222226] hover:bg-[#2e2e34] text-gray-200 border-0">Subscribe</button>
           </div>
         </div>
       </div>
