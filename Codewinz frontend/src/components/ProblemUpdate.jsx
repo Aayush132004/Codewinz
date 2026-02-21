@@ -11,7 +11,7 @@ const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
-  tags: z.enum(['array', 'linkedList', 'graph', 'dp','tree','string']),
+  tags: z.array(z.string()).min(1, 'At least one tag is required'),
   visibleTestCases: z.array(
     z.object({
       input: z.string().min(1, 'Input is required'),
@@ -58,7 +58,7 @@ reset({
    title:data?.title,
    description:data?.description,
    difficulty:data?.difficulty,
-   tags:data?.tags,
+   tags: Array.isArray(data?.tags) ? data?.tags : (data?.tags ? [data?.tags] : []),
   startCode: data?.startCode.map((value)=>{
     return{language:value.language,initialCode:value.initialCode};
   }),
@@ -83,6 +83,7 @@ fetch();
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
+      tags: [],
       startCode: [
         { language: 'c++', initialCode: '' },
         { language: 'java', initialCode: '' },
@@ -181,17 +182,21 @@ return (
             </div>
 
             <div className="form-control w-full">
-              <label className="label font-semibold">Tag</label>
-              <select {...register('tags')} className={`select select-bordered ${errors.tags && 'select-error'}`}>
-                <option value="">Select a tag</option>
-                <option value="array">Array</option>
-                <option value="linkedList">Linked List</option>
-                <option value="graph">Graph</option>
-                <option value="tree">Tree</option>
-                <option value="string">String</option>
-                <option value="dp">Dynamic Programming</option>
-              </select>
-              {errors.tags && <p className="text-error text-sm">{errors.tags.message}</p>}
+              <label className="label font-semibold">Tags</label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 bg-base-200 p-4 rounded-xl border border-base-300">
+                {['array', 'linkedlist', 'graph', 'dp', 'string', 'stack', 'queue', 'tree', 'bst'].map((tag) => (
+                  <label key={tag} className="flex items-center space-x-3 cursor-pointer hover:bg-white/5 p-1 rounded transition-colors">
+                    <input
+                      type="checkbox"
+                      value={tag}
+                      className="checkbox checkbox-sm checkbox-primary"
+                      {...register('tags')}
+                    />
+                    <span className="text-sm capitalize">{tag === 'dp' ? 'DP' : tag === 'bst' ? 'BST' : tag}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.tags && <p className="text-error text-sm mt-1">{errors.tags.message}</p>}
             </div>
           </div>
         </div>
