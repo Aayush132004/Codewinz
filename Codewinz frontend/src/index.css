@@ -44,3 +44,32 @@
     font-size: 2rem; /* text-2xl */
   }
 }
+
+/* Global scrollbar and smooth scroll styling */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #08080a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Dark monochrome theme helper overrides */
+.theme-dark-monochrome {
+  background-color: #000000;
+  color: #f4f4f5;
+}
