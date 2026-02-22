@@ -118,7 +118,7 @@ const Contests = () => {
   const stats = getFilterStats();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
+    <div className="min-h-screen bg-[#0a0a0c] text-gray-200">
       <Navbar />
       
       {/* Hero Values Section */}
@@ -130,40 +130,37 @@ const Contests = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-purple-500/50 transition-all duration-300 hover:-translate-y-2">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="group relative overflow-hidden bg-[#141417] border border-[#222226] rounded-2xl p-8 hover:border-slate-500/50 transition-all duration-300 hover:-translate-y-2">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/20">
+                <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Zap className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-purple-400 mb-4">Innovation</h3>
-                <p className="text-slate-300 leading-relaxed">
+                <h3 className="text-2xl font-bold text-slate-300 mb-4">Innovation</h3>
+                <p className="text-slate-400 leading-relaxed">
                   Pushing the boundaries of what's possible in competitive programming with cutting-edge problems and features.
                 </p>
               </div>
             </div>
 
-            <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-emerald-500/50 transition-all duration-300 hover:-translate-y-2">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="group relative overflow-hidden bg-[#141417] border border-[#222226] rounded-2xl p-8 hover:border-slate-500/50 transition-all duration-300 hover:-translate-y-2">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/20">
+                <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Users className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-emerald-400 mb-4">Community</h3>
-                <p className="text-slate-300 leading-relaxed">
+                <h3 className="text-2xl font-bold text-slate-300 mb-4">Community</h3>
+                <p className="text-slate-400 leading-relaxed">
                   Fostering a supportive and engaging environment where coders connect, learn, and grow together.
                 </p>
               </div>
             </div>
 
-            <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-amber-500/50 transition-all duration-300 hover:-translate-y-2">
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div className="group relative overflow-hidden bg-[#141417] border border-[#222226] rounded-2xl p-8 hover:border-slate-500/50 transition-all duration-300 hover:-translate-y-2">
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-amber-500/20">
+                <div className="w-16 h-16 bg-slate-800 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Target className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-amber-400 mb-4">Excellence</h3>
-                <p className="text-slate-300 leading-relaxed">
+                <h3 className="text-2xl font-bold text-slate-300 mb-4">Excellence</h3>
+                <p className="text-slate-400 leading-relaxed">
                   Striving for the highest standards in problem quality, platform performance, and user experience.
                 </p>
               </div>
@@ -204,8 +201,8 @@ const Contests = () => {
                 onClick={() => setFilter(status)}
                 className={`relative px-6 py-3 rounded-xl font-semibold transition-all duration-300 overflow-hidden
                   ${filter === status
-                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg shadow-blue-500/20 border border-blue-400/30'
-                    : 'bg-slate-800/60 text-slate-300 hover:bg-slate-700/60 hover:text-white border border-slate-700/50 backdrop-blur-xl'
+                    ? 'bg-slate-700 text-white shadow-lg border border-slate-600'
+                    : 'bg-[#141417] text-slate-300 hover:bg-[#1a1a1f] hover:text-white border border-[#222226]'
                   }`}
               >
                 <span className="relative z-10">
@@ -240,12 +237,8 @@ const Contests = () => {
               displayContests.map(contest => (
                 <div
                   key={contest._id}
-                  className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl p-8 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 hover:-translate-y-1"
+                  className="group relative overflow-hidden bg-[#141417] border border-[#222226] rounded-2xl p-8 hover:border-slate-500/50 transition-all duration-300 hover:-translate-y-1"
                 >
-                  {/* Background Glow Effect */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-2xl"></div>
-                  </div>
 
                   <div className="relative">
                     <div className="flex items-start justify-between mb-6">
