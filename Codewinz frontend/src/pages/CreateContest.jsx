@@ -123,7 +123,7 @@ const CreateContest = () => {
               ) : (
                 allProblems.map(problem => (
                   <div key={problem._id} style={styles.problemListItem}>
-                    <span>{problem.title} ({problem.difficulty}) ({problem.tags})</span>
+                    <span>{problem.title} ({problem.difficulty}) ({Array.isArray(problem.tags) ? problem.tags.join(', ') : problem.tags})</span>
                     <button type="button" onClick={() => handleAddProblem(problem)} style={styles.addButton}>
                       Add
                     </button>
