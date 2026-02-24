@@ -70,7 +70,13 @@ const Problems = () => {
     // Apply filters to all problems
     const filtered = allProblems.filter(problem => {
       const difficultyMatch = filter.difficulty === "all" || problem.difficulty === filter.difficulty;
-      const tagMatch = filter.tag === "all" || (problem.tags && problem.tags.includes(filter.tag));
+      const tagMatch = filter.tag === "all" || (
+        problem.tags && (
+          Array.isArray(problem.tags)
+            ? problem.tags.some(t => t.toLowerCase() === filter.tag.toLowerCase())
+            : problem.tags.toLowerCase() === filter.tag.toLowerCase()
+        )
+      );
       const statusMatch = filter.status === "all" || 
         (filter.status === "solved" && solvedproblem.some(sp => sp._id === problem._id)) ||
         (filter.status === "unsolved" && !solvedproblem.some(sp => sp._id === problem._id));
@@ -117,7 +123,7 @@ const Problems = () => {
   const tagProp = [
     { data: "All Tags", value: "all" },
     { data: "Array", value: "array" },
-    { data: "Linked List", value: "linkedList" },
+    { data: "Linked List", value: "linkedlist" },
     { data: "Graph", value: "graph" },
     { data: "Tree", value: "tree" },
     { data: "String", value: "string" },
@@ -177,12 +183,11 @@ const Problems = () => {
   );
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800'>
+    <div className='min-h-screen bg-[#0a0a0c] text-gray-200'>
       {/* Animated background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/5 rounded-full blur-2xl animate-pulse delay-500"></div>
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gray-500/3 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gray-600/3 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <Navbar />
@@ -192,22 +197,22 @@ const Problems = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
            
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
               Challenge yourself with our curated collection of programming problems. 
               Track your progress and master algorithms step by step.
             </p>
             <div className="flex justify-center mt-6">
-              <div className="flex items-center gap-6 text-sm text-slate-400">
+              <div className="flex items-center gap-6 text-sm text-slate-500">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span>{totalProblems} Total Problems</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                   <span>{solvedCount} Solved</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
                   <span>{remainingCount} Remaining</span>
                 </div>
               </div>
@@ -218,46 +223,46 @@ const Problems = () => {
 
       {/* Filters Section */}
       <div className="max-w-7xl mx-auto px-6 mb-12">
-        <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8 shadow-2xl">
-          <h2 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
-            <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></div>
+        <div className="bg-[#141417] rounded-2xl border border-[#222226] p-8 shadow-2xl">
+          <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-3">
+            <div className="w-1.5 h-6 bg-gray-600 rounded-full"></div>
             Filter Problems
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Status</label>
+              <label className="text-sm font-medium text-slate-400">Status</label>
               <Filter option={statusProp} field="status" state={{ setFilter, filter }} />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Difficulty</label>
+              <label className="text-sm font-medium text-slate-400">Difficulty</label>
               <Filter option={difficultyProp} field="difficulty" state={{ setFilter, filter }} />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Tags</label>
+              <label className="text-sm font-medium text-slate-400">Tags</label>
               <Filter option={tagProp} field="tag" state={{ setFilter, filter }} />
             </div>
           </div>
           
           {/* Filter Summary */}
-          <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-slate-700/50">
-            <span className="text-sm text-slate-400">Active filters:</span>
+          <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-[#222226]">
+            <span className="text-sm text-slate-500">Active filters:</span>
             {filter.status !== "all" && (
-              <span className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs font-medium border border-blue-500/30">
+              <span className="px-3 py-1 bg-[#1e1e24] text-gray-300 rounded-full text-xs font-medium border border-[#2e2e34]">
                 {statusProp.find(s => s.value === filter.status)?.data}
               </span>
             )}
             {filter.difficulty !== "all" && (
-              <span className="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-xs font-medium border border-orange-500/30">
+              <span className="px-3 py-1 bg-[#1e1e24] text-gray-300 rounded-full text-xs font-medium border border-[#2e2e34]">
                 {difficultyProp.find(d => d.value === filter.difficulty)?.data}
               </span>
             )}
             {filter.tag !== "all" && (
-              <span className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs font-medium border border-purple-500/30">
+              <span className="px-3 py-1 bg-[#1e1e24] text-gray-300 rounded-full text-xs font-medium border border-[#2e2e34]">
                 {tagProp.find(t => t.value === filter.tag)?.data}
               </span>
             )}
             {filter.status === "all" && filter.difficulty === "all" && filter.tag === "all" && (
-              <span className="px-3 py-1 bg-slate-600/20 text-slate-400 rounded-full text-xs">No filters applied</span>
+              <span className="px-3 py-1 bg-[#18181c] text-slate-500 rounded-full text-xs border border-[#222226]">No filters applied</span>
             )}
           </div>
         </div>
@@ -266,23 +271,23 @@ const Problems = () => {
       {/* Problems Section */}
       <div className="max-w-7xl mx-auto px-6 pb-12">
         {load ? (
-          <div className="bg-slate-800/30 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8">
+          <div className="bg-[#141417]/30 backdrop-blur-xl rounded-2xl border border-[#222226] p-8">
             <ProblemSkeleton />
           </div>
         ) : (
           <div className="relative">
-            <div className={`bg-slate-800/30 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-8 transition-all duration-300 ${
+            <div className={`bg-[#141417]/30 backdrop-blur-xl rounded-2xl border border-[#222226] p-8 transition-all duration-300 ${
               isTransitioning ? 'opacity-50 scale-98' : 'opacity-100 scale-100'
             }`}>
               
               {/* Results Header */}
               <div className="flex justify-between items-center mb-8">
                 <div>
-                  <h2 className="text-2xl font-semibold text-white flex items-center gap-3">
-                    <div className="w-2 h-8 bg-gradient-to-b from-green-500 to-blue-500 rounded-full"></div>
+                  <h2 className="text-xl font-semibold text-white flex items-center gap-3">
+                    <div className="w-1.5 h-6 bg-gray-600 rounded-full"></div>
                     Problems ({filteredCount})
                   </h2>
-                  <p className="text-slate-400 mt-1">
+                  <p className="text-slate-400 mt-1 text-sm">
                     Page {page} of {totalPage} • Showing {problems.length} of {filteredCount} problems
                   </p>
                 </div>
