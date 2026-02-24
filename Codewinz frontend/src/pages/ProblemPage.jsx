@@ -8,8 +8,8 @@ import Submissionhistory from '../components/Submissionhistory';
 import Editorial from '../components/Editorial';
 import ChatAi from '../components/ChatAi';
 import CreateSessionButton from '../components/CreateSessionButton';
-// You would also need to import the CollaborativeEditor component if you use it.
-// import CollaborativeEditor from '../components/CollaborativeEditor';
+import CollaborativeEditor from '../components/CollaborativeEditor';
+import Navbar from '../components/Navbar';
 
 const ProblemPage = () => {
   const { user } = useSelector((state) => state.auth);
@@ -276,25 +276,26 @@ const ProblemPage = () => {
   // --- CONDITIONAL RENDERING FOR COLLABORATIVE MODE ---
   if (sessionId) {
     // If a sessionId is present, render the CollaborativeEditor
-    // return <CollaborativeEditor />;
-    return <div>Collaborative Editor Placeholder</div>;
+    return <CollaborativeEditor />;
   }
 
   // --- Normal Problem Page Rendering (if no sessionId) ---
   if (loading && !problem) {
     return (
-      <div className="flex bg-gradient-to-br from-[#0f172a] via-[#1e253b] to-[#1e293b] justify-center items-center min-h-screen">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
+      <div className="flex bg-[#060608] justify-center items-center min-h-screen">
+        <span className="loading loading-spinner loading-lg text-gray-500"></span>
       </div>
     );
   }
 
   return (
-    <div className="h-screen flex bg-gradient-to-br from-[#0f172a] via-[#1e253b] to-[#1e293b] text-base-content overflow-hidden">
-      {/* Left Panel */}
-      <div className="flex flex-col border-r border-base-300 bg-white/5 backdrop-blur-md shadow-inner" style={{ width: `${leftPanelWidth}%` }}>
-        {/* Left Tabs */}
-        <div className="tabs tabs-lifted px-6 py-3 border-b border-base-300 flex justify-between items-center">
+    <div className="h-screen flex flex-col bg-[#060608] text-gray-200">
+      <Navbar />
+      <div className="flex-1 flex pt-16 overflow-hidden">
+        {/* Left Panel */}
+        <div className="flex flex-col border-r border-[#1c1c22] bg-[#101012] shadow-inner" style={{ width: `${leftPanelWidth}%` }}>
+          {/* Left Tabs */}
+          <div className="tabs tabs-lifted px-6 py-3 border-b border-[#1c1c22] bg-[#0e0e11] flex justify-between items-center">
           <div className="flex">
             {['description', 'video Solution', 'solutions', 'submissions', 'chatAI', 'testcase', 'result'].map((tab) => (
               <button
@@ -318,7 +319,13 @@ const ProblemPage = () => {
                   <div className="flex flex-wrap items-center gap-4">
                     <h1 className="text-3xl font-extrabold text-primary-content drop-shadow-sm">{problem.title}</h1>
                     <div className={`badge badge-outline px-3 py-1 text-sm ${getDifficultyColor(problem.difficulty)}`}>{problem.difficulty}</div>
-                    <div className="badge badge-secondary px-3 py-1 text-sm">{problem.tags}</div>
+                    {Array.isArray(problem.tags) ? (
+                      problem.tags.map((tag, idx) => (
+                        <div key={idx} className="badge badge-secondary px-3 py-1 text-sm capitalize">{tag === 'dp' ? 'DP' : tag === 'bst' ? 'BST' : tag}</div>
+                      ))
+                    ) : (
+                      problem.tags && <div className="badge badge-secondary px-3 py-1 text-sm capitalize">{problem.tags === 'dp' ? 'DP' : problem.tags === 'bst' ? 'BST' : problem.tags}</div>
+                    )}
                   </div>
 
                   <div className="prose prose-sm max-w-none prose-p:text-base-content/80 whitespace-pre-wrap leading-relaxed">
@@ -329,13 +336,13 @@ const ProblemPage = () => {
                     <h3 className="text-lg font-semibold mb-3">Examples:</h3>
                     <div className="grid gap-4">
                       {problem.visibleTestCases.map((example, index) => (
-                        <div key={index} className="rounded-xl bg-base-200/60 p-5 border border-base-300 shadow-sm">
-                          <h4 className="font-semibold text-base-content mb-2">Example {index + 1}:</h4>
+                        <div key={index} className="rounded-xl bg-[#16161a] p-5 border border-[#222226] shadow-sm">
+                          <h4 className="font-semibold text-white mb-2">Example {index + 1}:</h4>
                           <div className="space-y-1 font-mono text-xs">
-                            <div><strong>Input:</strong> <pre className="inline bg-gray-800 p-1 rounded text-xs">{example.input}</pre></div>
-                            <div><strong>Output:</strong> <pre className="inline bg-gray-800 p-1 rounded text-xs">{example.output}</pre></div>
+                            <div><strong>Input:</strong> <pre className="inline bg-[#0e0e11] text-gray-300 border border-[#1e1e24] p-1 rounded text-xs">{example.input}</pre></div>
+                            <div><strong>Output:</strong> <pre className="inline bg-[#0e0e11] text-gray-300 border border-[#1e1e24] p-1 rounded text-xs">{example.output}</pre></div>
                             {example.explanation && (
-                              <div><strong>Explanation:</strong> <pre className="inline bg-gray-800 p-1 rounded text-xs">{example.explanation}</pre></div>
+                              <div><strong>Explanation:</strong> <pre className="inline bg-[#0e0e11] text-gray-300 border border-[#1e1e24] p-1 rounded text-xs">{example.explanation}</pre></div>
                             )}
                           </div>
                         </div>
@@ -592,21 +599,21 @@ const ProblemPage = () => {
 
       {/* Resizable Divider */}
       <div
-        className="w-2 bg-gray-700 cursor-ew-resize hover:bg-blue-500 transition-colors duration-100 flex items-center justify-center"
+        className="w-2 bg-[#1c1c22] cursor-ew-resize hover:bg-slate-700 transition-colors duration-100 flex items-center justify-center"
         onMouseDown={handleMouseDown}
       >
-        <div className="w-1 h-8 bg-gray-500 rounded-full"></div>
+        <div className="w-1 h-8 bg-slate-600 rounded-full"></div>
       </div>
 
       {/* Right Panel - Code Editor */}
-      <div className="flex flex-col bg-base-100" style={{ width: `${100 - leftPanelWidth}%` }}>
+      <div className="flex flex-col bg-[#101012]" style={{ width: `${100 - leftPanelWidth}%` }}>
         <div className="flex-1 flex flex-col">
-          <div className="flex justify-between items-center p-4 bg-base-100 border-b border-base-300">
+          <div className="flex justify-between items-center p-4 bg-[#0e0e11] border-b border-[#1c1c22]">
             <div className="flex gap-4 items-center w-full justify-between">
               {/* Language Dropdown */}
               <div className="relative">
                 <select
-                  className="select select-sm bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                  className="select select-sm bg-[#141416] text-white border-[#222226] focus:outline-none focus:ring-1 focus:ring-slate-700 rounded-full hover:bg-[#1a1a1f] transition-all"
                   value={selectedLanguage}
                   onChange={(e) => handleLanguageChange(e.target.value)}
                 >
@@ -620,7 +627,7 @@ const ProblemPage = () => {
               {/* Theme Dropdown */}
               <div className="relative">
                 <select
-                  className="select select-sm bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                  className="select select-sm bg-[#141416] text-white border-[#222226] focus:outline-none focus:ring-1 focus:ring-slate-700 rounded-full hover:bg-[#1a1a1f] transition-all"
                   value={selectedTheme}
                   onChange={(e) => handleThemeChange(e.target.value)}
                 >
@@ -639,7 +646,7 @@ const ProblemPage = () => {
               </div>
             </div>
           </div>
-          <div className="flex-1 rounded-2xl border border-[#2c3e50] bg-[#0f172a] shadow-md overflow-hidden mx-4 mb-4">
+          <div className="flex-1 border border-[#1c1c22] bg-[#0e0e11] shadow-md overflow-hidden mx-4 mb-4 rounded-xl">
             <Editor
               height="100%"
               language={getLanguageForMonaco(selectedLanguage)}
@@ -666,14 +673,15 @@ const ProblemPage = () => {
               }}
             />
           </div>
-          <div className="bg-base-100 border-t border-base-300 flex justify-end p-4">
+          <div className="bg-[#0e0e11] border-t border-[#1c1c22] flex justify-end p-4">
             <div className="flex gap-4">
-              <button className={`btn btn-outline btn-sm ${loading ? 'loading' : ''} border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white transition-all duration-200`} onClick={handleRun} disabled={loading}>Run</button>
-              <button className={`btn btn-primary btn-sm ${loading ? 'loading' : ''} bg-green-600 border-green-600 text-white hover:bg-green-700 hover:border-green-700 shadow-lg transition-all duration-200`} onClick={handleSubmitCode} disabled={loading}>Submit</button>
+              <button className={`btn btn-outline btn-sm ${loading ? 'loading' : ''} border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200`} onClick={handleRun} disabled={loading}>Run</button>
+              <button className={`btn btn-sm ${loading ? 'loading' : ''} bg-[#222226] border-0 text-white hover:bg-[#2e2e34] shadow-lg transition-all duration-200`} onClick={handleSubmitCode} disabled={loading}>Submit</button>
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
