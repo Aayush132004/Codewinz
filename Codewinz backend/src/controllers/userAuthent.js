@@ -168,7 +168,11 @@ try{
   // got same token as frontend console.log(id_token)
   const ticket=await client.verifyIdToken({
     idToken:id_token,
-    audience:process.env.GOOGLE_CLIENT_ID,
+    audience:[
+      process.env.GOOGLE_CLIENT_ID,
+      '191520716900-pbi9qeu4m2ibka1eqapass1aviiicqk8.apps.googleusercontent.com',
+      '984367550212-fo1gr5tkv8h9cil806qbums5pv5pr888.apps.googleusercontent.com'
+    ].filter(Boolean),
   });
  
   const payload=ticket.getPayload();
