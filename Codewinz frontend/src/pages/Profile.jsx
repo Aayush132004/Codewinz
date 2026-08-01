@@ -39,61 +39,61 @@ const CustomTooltip = ({ content, position, visible }) => {
 const getSaiyanInfo = (score) => {
   if (score >= 2000) return {
     level: 'Ultra Instinct',
-    color: 'from-purple-400 via-blue-500 to-indigo-600',
-    bgColor: 'bg-gradient-to-r from-purple-900/30 to-indigo-900/30',
-    borderColor: 'border-purple-500',
-    textColor: 'text-purple-300',
-    glowColor: 'shadow-purple-500/50',
+    color: 'from-white via-zinc-300 to-zinc-400',
+    bgColor: 'bg-zinc-900/40',
+    borderColor: 'border-zinc-400',
+    textColor: 'text-zinc-200',
+    glowColor: 'shadow-zinc-500/30',
     image: `assets/ultra.webp`, // Ultra Instinct Goku
     aura: 'animate-pulse'
   };
   if (score >= 1500) return {
     level: 'Super Saiyan God',
-    color: 'from-red-400 via-pink-500 to-red-600',
-    bgColor: 'bg-gradient-to-r from-red-900/30 to-pink-900/30',
-    borderColor: 'border-red-500',
-    textColor: 'text-red-300',
-    glowColor: 'shadow-red-500/50',
+    color: 'from-zinc-200 via-zinc-400 to-zinc-500',
+    bgColor: 'bg-zinc-900/30',
+    borderColor: 'border-zinc-500',
+    textColor: 'text-zinc-300',
+    glowColor: 'shadow-zinc-500/20',
     image: '/assets/SSGOD.jpg', // SSG Goku
     aura: 'animate-bounce'
   };
   if (score >= 1000) return {
     level: 'Super Saiyan 3',
-    color: 'from-yellow-400 via-orange-500 to-yellow-600',
-    bgColor: 'bg-gradient-to-r from-yellow-900/30 to-orange-900/30',
-    borderColor: 'border-yellow-500',
-    textColor: 'text-yellow-300',
-    glowColor: 'shadow-yellow-500/50',
+    color: 'from-zinc-300 via-zinc-500 to-zinc-600',
+    bgColor: 'bg-zinc-900/20',
+    borderColor: 'border-zinc-600',
+    textColor: 'text-zinc-400',
+    glowColor: 'shadow-zinc-600/20',
     image: '/assets/SS3.jpg', // SS3 Goku
     aura: 'animate-pulse'
   };
   if (score >= 600) return {
     level: 'Super Saiyan 2',
-    color: 'from-yellow-300 via-yellow-500 to-amber-600',
-    bgColor: 'bg-gradient-to-r from-yellow-900/20 to-amber-900/20',
-    borderColor: 'border-yellow-400',
-    textColor: 'text-yellow-200',
-    glowColor: 'shadow-yellow-400/50',
+    color: 'from-zinc-400 via-zinc-600 to-zinc-700',
+    bgColor: 'bg-zinc-900/20',
+    borderColor: 'border-zinc-700',
+    textColor: 'text-zinc-400',
+    glowColor: 'shadow-zinc-700/20',
     image: '/assets/superSaiyan2.jpg', // SS2 Goku
     aura: ''
   };
   if (score >= 300) return {
     level: 'Super Saiyan',
-    color: 'from-yellow-200 via-yellow-400 to-yellow-600',
-    bgColor: 'bg-gradient-to-r from-yellow-900/20 to-yellow-800/20',
-    borderColor: 'border-yellow-300',
-    textColor: 'text-yellow-100',
-    glowColor: 'shadow-yellow-300/50',
+    color: 'from-zinc-500 via-zinc-700 to-zinc-800',
+    bgColor: 'bg-zinc-900/10',
+    borderColor: 'border-zinc-800',
+    textColor: 'text-zinc-500',
+    glowColor: 'shadow-zinc-800/15',
     image: `/assets/superSaiyan.jpg`, // SS1 Goku
     aura: ''
   };
   return {
     level: 'Human',
-    color: 'from-gray-400 via-gray-500 to-gray-600',
-    bgColor: 'bg-gradient-to-r from-gray-900/20 to-gray-800/20',
-    borderColor: 'border-gray-500',
-    textColor: 'text-gray-300',
-    glowColor: 'shadow-gray-500/50',
+    color: 'from-zinc-600 via-zinc-800 to-zinc-900',
+    bgColor: 'bg-zinc-950/10',
+    borderColor: 'border-zinc-900',
+    textColor: 'text-zinc-600',
+    glowColor: 'shadow-zinc-900/10',
     image: '/assets/baseGoku.webp', // Base Goku
     aura: ''
   };
@@ -244,15 +244,15 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e253b] to-[#1e293b] flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg text-primary"></span>
+      <div className="min-h-screen bg-[#060608] flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg text-zinc-400"></span>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e253b] to-[#1e293b] flex items-center justify-center text-red-400 text-lg">
+      <div className="min-h-screen bg-[#060608] flex items-center justify-center text-zinc-400 text-lg">
         Failed to load user profile.
       </div>
     );
@@ -261,19 +261,19 @@ const Profile = () => {
   const saiyanInfo = getSaiyanInfo(user.score);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e253b] to-[#1e293b] text-gray-100 flex flex-col items-center p-6 sm:p-10">
+    <div className="min-h-screen bg-[#060608] text-gray-100 flex flex-col items-center p-6 sm:p-10 pt-24">
       {/* Profile Header Section */}
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-5xl bg-gray-800 rounded-2xl shadow-2xl p-8 flex flex-col lg:flex-row items-center justify-between gap-8 border border-gray-700/50"
+        className="w-full max-w-5xl bg-[#101012] rounded-2xl shadow-2xl p-8 flex flex-col lg:flex-row items-center justify-between gap-8 border border-zinc-800"
       >
         {/* Profile Info Section */}
         <div className="flex flex-col sm:flex-row items-center gap-6">
-          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-purple-500 shadow-xl flex-shrink-0">
+          <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-zinc-700 shadow-xl flex-shrink-0">
             <img 
-              src={user.profile || "https://placehold.co/150x150/2d3748/e2e8f0?text=Profile"} 
+              src={user.profile || `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(user?.email || 'user')}`} 
               alt="Profile" 
               className="w-full h-full object-cover" 
               onError={(e) => e.target.src = "https://placehold.co/150x150/2d3748/e2e8f0?text=Profile"}
@@ -281,12 +281,12 @@ const Profile = () => {
           </div>
           <div className="text-center sm:text-left">
             <h1 className="text-4xl font-extrabold text-white leading-tight">{user.name}</h1>
-            <p className="text-md text-gray-400 mt-1">{user.email}</p>
+            <p className="text-md text-zinc-400 mt-1">{user.email}</p>
             <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-3">
-              <div className="badge badge-lg bg-blue-600 text-white border-blue-700 shadow-md">
+              <div className="badge badge-lg bg-zinc-800 text-zinc-300 border-zinc-700 shadow-md">
                 <span className="font-semibold">{user.questionsSolved}</span> Solved
               </div>
-              <div className="badge badge-lg bg-purple-600 text-white border-purple-700 shadow-md">
+              <div className="badge badge-lg bg-zinc-700 text-white border-zinc-600 shadow-md">
                 <span className="font-semibold">{user.loginStreak}</span> Day Streak 🔥
               </div>
             </div>
@@ -344,10 +344,10 @@ const Profile = () => {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="card bg-gray-800 rounded-2xl shadow-xl border border-gray-700/50"
+          className="card bg-[#101012] rounded-2xl shadow-xl border border-zinc-800"
         >
           <div className="card-body p-6">
-            <h2 className="text-lg font-semibold text-purple-400 mb-2">Problems Solved</h2>
+            <h2 className="text-lg font-semibold text-zinc-400 mb-2">Problems Solved</h2>
             <AnimatePresence mode="wait">
               <motion.h1
                 key={user.questionsSolved}
@@ -355,15 +355,15 @@ const Profile = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="text-5xl font-extrabold text-green-400"
+                className="text-5xl font-extrabold text-white"
               >
                 {user.questionsSolved}
               </motion.h1>
             </AnimatePresence>
-            <p className="text-gray-400 mt-2">Out of {user.totalQuestions} problems</p>
-            <div className="w-full bg-gray-700 rounded-full h-3 mt-4">
+            <p className="text-zinc-500 mt-2">Out of {user.totalQuestions} problems</p>
+            <div className="w-full bg-zinc-800 rounded-full h-3 mt-4">
               <div
-                className="bg-gradient-to-r from-green-500 to-emerald-400 h-3 rounded-full transition-all duration-1000"
+                className="bg-zinc-700 h-3 rounded-full transition-all duration-1000"
                 style={{ width: `${(user.questionsSolved / user.totalQuestions) * 100 || 0}%` }}
               ></div>
             </div>
@@ -375,23 +375,23 @@ const Profile = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="card bg-gray-800 rounded-2xl shadow-xl border border-gray-700/50"
+          className="card bg-[#101012] rounded-2xl shadow-xl border border-zinc-800"
         >
           <div className="card-body p-6">
-            <h2 className="text-lg font-semibold text-blue-400 mb-2">Login Streak</h2>
+            <h2 className="text-lg font-semibold text-zinc-400 mb-2">Login Streak</h2>
             <motion.h1
               key={user.loginStreak}
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
-              className="text-5xl font-extrabold text-orange-400"
+              className="text-5xl font-extrabold text-white"
             >
               {user.loginStreak} <span className="text-2xl">🔥</span>
             </motion.h1>
-            <p className="text-gray-400 mt-2">Days in a row</p>
-            <div className="w-full bg-gray-700 rounded-full h-3 mt-4">
+            <p className="text-zinc-500 mt-2">Days in a row</p>
+            <div className="w-full bg-zinc-800 rounded-full h-3 mt-4">
               <div
-                className="bg-gradient-to-r from-orange-500 to-red-400 h-3 rounded-full transition-all duration-1000"
+                className="bg-zinc-700 h-3 rounded-full transition-all duration-1000"
                 style={{ width: `${Math.min(100, (user.loginStreak / 30) * 100)}%` }}
               ></div>
             </div>
@@ -417,7 +417,7 @@ const Profile = () => {
               {user.score}
             </motion.h1>
             <p className={`${saiyanInfo.textColor} mt-2`}>{saiyanInfo.level} Level</p>
-            <div className="w-full bg-gray-700 rounded-full h-3 mt-4">
+            <div className="w-full bg-zinc-800 rounded-full h-3 mt-4">
               <div
                 className={`bg-gradient-to-r ${saiyanInfo.color} h-3 rounded-full transition-all duration-1000 ${saiyanInfo.aura}`}
                 style={{ width: `${Math.min(100, (user.score / 2000) * 100)}%` }}
@@ -432,9 +432,9 @@ const Profile = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="w-full max-w-5xl bg-gray-800 rounded-2xl shadow-xl p-6 mt-10 border border-gray-700/50"
+        className="w-full max-w-5xl bg-[#101012] rounded-2xl shadow-xl p-6 mt-10 border border-zinc-800"
       >
-        <h2 className="text-lg font-semibold text-green-400 mb-4">Submission Activity (Last 12 Months)</h2>
+        <h2 className="text-lg font-bold text-white mb-4 font-bold">Submission Activity (Last 12 Months)</h2>
         <div className="flex items-start gap-1">
           {/* Day labels (vertical) */}
           <div className="flex flex-col gap-1 mt-6">
@@ -490,9 +490,9 @@ const Profile = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.7 }}
-        className="w-full max-w-5xl bg-gray-800 rounded-2xl shadow-xl p-6 mt-10 border border-gray-700/50"
+        className="w-full max-w-5xl bg-[#101012] rounded-2xl shadow-xl p-6 mt-10 border border-zinc-800"
       >
-        <h2 className="text-lg font-semibold text-blue-400 mb-4">Problems Solved by Topic</h2>
+        <h2 className="text-lg font-bold text-white mb-4">Problems Solved by Topic</h2>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={user.topics}
@@ -503,16 +503,16 @@ const Profile = () => {
               bottom: 5,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#4a5568" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#222226" />
             <XAxis dataKey="name" stroke="#cbd5e0" tick={{ fill: '#a0aec0', fontSize: 12 }} />
             <YAxis stroke="#cbd5e0" tick={{ fill: '#a0aec0', fontSize: 12 }} />
             <RechartsTooltip
-              cursor={{ fill: 'rgba(255,255,255,0.1)' }}
+              cursor={{ fill: 'rgba(255,255,255,0.05)' }}
               contentStyle={{ 
-                backgroundColor: '#2d3748', 
-                border: 'none', 
+                backgroundColor: '#101012', 
+                border: '1px solid #27272a', 
                 borderRadius: '12px', 
-                boxShadow: '0 10px 25px rgba(0,0,0,0.3)' 
+                boxShadow: '0 10px 25px rgba(0,0,0,0.5)' 
               }}
               labelStyle={{ color: '#e2e8f0', fontWeight: 'bold' }}
               itemStyle={{ color: '#e2e8f0' }}
@@ -526,8 +526,8 @@ const Profile = () => {
             />
             <defs>
               <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.9}/>
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.7}/>
+                <stop offset="5%" stopColor="#e4e4e7" stopOpacity={0.9}/>
+                <stop offset="95%" stopColor="#52525b" stopOpacity={0.7}/>
               </linearGradient>
             </defs>
           </BarChart>
@@ -539,17 +539,17 @@ const Profile = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
-        className="w-full max-w-5xl bg-gray-800 rounded-2xl shadow-xl p-6 mt-10 border border-gray-700/50"
+        className="w-full max-w-5xl bg-[#101012] rounded-2xl shadow-xl p-6 mt-10 border border-zinc-800"
       >
-        <h2 className="text-lg font-semibold text-yellow-400 mb-6">Power Level Milestones</h2>
+        <h2 className="text-lg font-bold text-white mb-6">Power Level Milestones</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {[
-            { level: 'Human', score: 0, color: 'gray' },
-            { level: 'Super Saiyan', score: 300, color: 'yellow' },
-            { level: 'Super Saiyan 2', score: 600, color: 'amber' },
-            { level: 'Super Saiyan 3', score: 1000, color: 'orange' },
-            { level: 'Super Saiyan God', score: 1500, color: 'red' },
-            { level: 'Ultra Instinct', score: 2000, color: 'purple' }
+            { level: 'Human', score: 0 },
+            { level: 'Super Saiyan', score: 300 },
+            { level: 'Super Saiyan 2', score: 600 },
+            { level: 'Super Saiyan 3', score: 1000 },
+            { level: 'Super Saiyan God', score: 1500 },
+            { level: 'Ultra Instinct', score: 2000 }
           ].map((milestone, index) => {
             const isAchieved = user.score >= milestone.score;
             const isCurrent = user.score >= milestone.score && 
@@ -563,25 +563,25 @@ const Profile = () => {
                 transition={{ duration: 0.3, delay: 0.1 * index }}
                 className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${
                   isCurrent 
-                    ? `border-${milestone.color}-400 bg-${milestone.color}-900/30 shadow-lg shadow-${milestone.color}-500/50` 
+                    ? 'border-zinc-400 bg-zinc-900/60 shadow-lg shadow-white/5' 
                     : isAchieved 
-                    ? `border-${milestone.color}-600 bg-${milestone.color}-900/20` 
-                    : 'border-gray-600 bg-gray-900/20'
+                    ? 'border-zinc-800 bg-zinc-900/20' 
+                    : 'border-zinc-900 bg-zinc-950/20'
                 }`}
               >
                 {isCurrent && (
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center">
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-zinc-700 rounded-full flex items-center justify-center">
                     <span className="text-xs">⭐</span>
                   </div>
                 )}
                 <div className="text-center">
-                  <div className={`text-2xl mb-2 ${isAchieved ? `text-${milestone.color}-400` : 'text-gray-500'}`}>
+                  <div className={`text-2xl mb-2 ${isAchieved ? 'text-zinc-200' : 'text-gray-600'}`}>
                     {isAchieved ? '🏆' : '🔒'}
                   </div>
-                  <h3 className={`text-xs font-bold mb-1 ${isAchieved ? `text-${milestone.color}-300` : 'text-gray-400'}`}>
+                  <h3 className={`text-xs font-bold mb-1 ${isAchieved ? 'text-zinc-200' : 'text-gray-500'}`}>
                     {milestone.level}
                   </h3>
-                  <p className={`text-xs ${isAchieved ? `text-${milestone.color}-200` : 'text-gray-500'}`}>
+                  <p className={`text-xs ${isAchieved ? 'text-zinc-400' : 'text-gray-600'}`}>
                     {milestone.score} pts
                   </p>
                 </div>
@@ -591,7 +591,7 @@ const Profile = () => {
         </div>
 
         {/* Next Milestone Progress */}
-        <div className="mt-6 p-4 bg-gray-900/50 rounded-xl">
+        <div className="mt-6 p-4 bg-zinc-900/30 border border-zinc-850 rounded-xl">
           <h3 className="text-sm font-semibold text-gray-300 mb-2">Next Milestone Progress</h3>
           {(() => {
             const nextMilestone = [300, 600, 1000, 1500, 2000].find(score => user.score < score);
@@ -599,7 +599,7 @@ const Profile = () => {
               return (
                 <div className="text-center py-4">
                   <span className="text-2xl">🎉</span>
-                  <p className="text-purple-400 font-bold mt-2">Ultra Instinct Achieved!</p>
+                  <p className="text-white font-bold mt-2">Ultra Instinct Achieved!</p>
                   <p className="text-gray-400 text-sm">You've reached the highest power level!</p>
                 </div>
               );
@@ -612,11 +612,11 @@ const Profile = () => {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-gray-300">{user.score} / {nextMilestone}</span>
-                  <span className="text-yellow-400">{remaining} points to go!</span>
+                  <span className="text-zinc-400">{remaining} points to go!</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-3">
+                <div className="w-full bg-zinc-800 rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-yellow-400 to-orange-500 h-3 rounded-full transition-all duration-1000"
+                    className="bg-zinc-750 h-3 rounded-full transition-all duration-1000"
                     style={{ width: `${(user.score / nextMilestone) * 100}%` }}
                   ></div>
                 </div>
@@ -631,25 +631,25 @@ const Profile = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.9 }}
-        className="w-full max-w-5xl bg-gray-800 rounded-2xl shadow-xl p-6 mt-10 border border-gray-700/50"
+        className="w-full max-w-5xl bg-[#101012] rounded-2xl shadow-xl p-6 mt-10 border border-zinc-800"
       >
-        <h2 className="text-lg font-semibold text-green-400 mb-4">Quick Stats</h2>
+        <h2 className="text-lg font-bold text-white mb-4">Quick Stats</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-blue-900/20 rounded-xl border border-blue-700/30">
-            <div className="text-2xl font-bold text-blue-400">{user.problemSolved?.length || 0}</div>
-            <div className="text-xs text-blue-300">Total Submissions</div>
+          <div className="text-center p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/80">
+            <div className="text-2xl font-bold text-white">{user.problemSolved?.length || 0}</div>
+            <div className="text-xs text-zinc-400">Total Submissions</div>
           </div>
-          <div className="text-center p-4 bg-green-900/20 rounded-xl border border-green-700/30">
-            <div className="text-2xl font-bold text-green-400">{user.questionsSolved}</div>
-            <div className="text-xs text-green-300">Problems Solved</div>
+          <div className="text-center p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/80">
+            <div className="text-2xl font-bold text-white">{user.questionsSolved}</div>
+            <div className="text-xs text-zinc-400">Problems Solved</div>
           </div>
-          <div className="text-center p-4 bg-purple-900/20 rounded-xl border border-purple-700/30">
-            <div className="text-2xl font-bold text-purple-400">{user.loginStreak}</div>
-            <div className="text-xs text-purple-300">Day Streak</div>
+          <div className="text-center p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/80">
+            <div className="text-2xl font-bold text-white">{user.loginStreak}</div>
+            <div className="text-xs text-zinc-400">Day Streak</div>
           </div>
-          <div className="text-center p-4 bg-yellow-900/20 rounded-xl border border-yellow-700/30">
-            <div className="text-2xl font-bold text-yellow-400">{Math.round((user.questionsSolved / user.totalQuestions) * 100) || 0}%</div>
-            <div className="text-xs text-yellow-300">Completion Rate</div>
+          <div className="text-center p-4 bg-zinc-900/30 rounded-xl border border-zinc-800/80">
+            <div className="text-2xl font-bold text-white">{Math.round((user.questionsSolved / user.totalQuestions) * 100) || 0}%</div>
+            <div className="text-xs text-zinc-400">Completion Rate</div>
           </div>
         </div>
       </motion.div>
@@ -661,24 +661,24 @@ const Profile = () => {
         transition={{ duration: 0.5, delay: 1.0 }}
         className="w-full max-w-5xl text-center mt-10 mb-10"
       >
-        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-2xl p-6 border border-purple-700/30">
-          <h3 className="text-xl font-bold text-purple-300 mb-4">💡 Did You Know?</h3>
+        <div className="bg-[#101012] rounded-2xl p-6 border border-zinc-800">
+          <h3 className="text-xl font-bold text-white mb-4">💡 Did You Know?</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-300">
-            <div className="flex items-center gap-2">
-              <span className="text-yellow-400">⚡</span>
-              <span>Your current power level puts you in the <strong className={`bg-gradient-to-r ${saiyanInfo.color} bg-clip-text text-transparent`}>{saiyanInfo.level}</strong> tier!</span>
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <span className="text-zinc-400">⚡</span>
+              <span>Your current power level puts you in the <strong className="text-zinc-200">{saiyanInfo.level}</strong> tier!</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-green-400">🎯</span>
-              <span>You've solved <strong className="text-green-400">{user.questionsSolved}</strong> out of <strong className="text-blue-400">{user.totalQuestions}</strong> problems!</span>
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <span className="text-zinc-400">🎯</span>
+              <span>You've solved <strong className="text-zinc-200">{user.questionsSolved}</strong> out of <strong className="text-zinc-400">{user.totalQuestions}</strong> problems!</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-orange-400">🔥</span>
-              <span>Your longest streak is <strong className="text-orange-400">{user.loginStreak}</strong> days!</span>
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <span className="text-zinc-400">🔥</span>
+              <span>Your longest streak is <strong className="text-zinc-200">{user.loginStreak}</strong> days!</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-purple-400">🏆</span>
-              <span>Contest score: <strong className="text-purple-400">{user.score}</strong> points earned!</span>
+            <div className="flex items-center justify-center md:justify-start gap-2">
+              <span className="text-zinc-400">🏆</span>
+              <span>Contest score: <strong className="text-zinc-200">{user.score}</strong> points earned!</span>
             </div>
           </div>
         </div>

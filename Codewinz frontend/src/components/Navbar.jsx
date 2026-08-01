@@ -84,7 +84,7 @@ const Navbar = () => {
                   <div className="w-9 h-9 rounded-full ring-2 ring-[#2e2e38] group-hover:ring-[#3e3e48] transition-all duration-300 overflow-hidden">
                     <img
                       alt="User Avatar"
-                      src={user?.profile || '/default-avatar.png'}
+                      src={user?.profile ? user.profile : `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(user?.emailId || 'user')}`}
                       className="w-full h-full object-cover"
                     />
                   </div>

@@ -34,40 +34,40 @@ const quickMessages = [
 // Theme configurations
 const themes = {
   cosmic: {
-    name: 'Cosmic',
-    primary: 'from-blue-600 to-purple-600',
-    secondary: 'from-blue-500/20 to-purple-500/20',
-    accent: 'text-blue-400',
-    bg: 'bg-slate-900',
-    cardBg: 'bg-slate-800/60',
-    border: 'border-blue-500/30'
+    name: 'Dark Monochrome',
+    primary: 'from-zinc-800 to-zinc-700',
+    secondary: 'from-zinc-800/40 to-zinc-700/40',
+    accent: 'text-white',
+    bg: 'bg-[#060608]',
+    cardBg: 'bg-[#101012]',
+    border: 'border-zinc-800'
   },
   neon: {
-    name: 'Neon',
-    primary: 'from-cyan-500 to-emerald-500',
-    secondary: 'from-cyan-500/20 to-emerald-500/20',
-    accent: 'text-cyan-400',
-    bg: 'bg-gray-900',
-    cardBg: 'bg-gray-800/60',
-    border: 'border-cyan-500/30'
+    name: 'Stealth Grey',
+    primary: 'from-zinc-700 to-zinc-600',
+    secondary: 'from-zinc-700/40 to-zinc-600/40',
+    accent: 'text-zinc-300',
+    bg: 'bg-[#09090b]',
+    cardBg: 'bg-[#121214]',
+    border: 'border-zinc-800'
   },
   sunset: {
-    name: 'Sunset',
-    primary: 'from-orange-500 to-pink-500',
-    secondary: 'from-orange-500/20 to-pink-500/20',
-    accent: 'text-orange-400',
-    bg: 'bg-slate-900',
-    cardBg: 'bg-slate-800/60',
-    border: 'border-orange-500/30'
+    name: 'Matte Black',
+    primary: 'from-zinc-900 to-zinc-800',
+    secondary: 'from-zinc-900/55 to-zinc-800/55',
+    accent: 'text-zinc-100',
+    bg: 'bg-[#020203]',
+    cardBg: 'bg-[#0a0a0c]',
+    border: 'border-zinc-900'
   },
   forest: {
-    name: 'Forest',
-    primary: 'from-green-600 to-teal-600',
-    secondary: 'from-green-500/20 to-teal-500/20',
-    accent: 'text-green-400',
-    bg: 'bg-slate-900',
-    cardBg: 'bg-slate-800/60',
-    border: 'border-green-500/30'
+    name: 'Carbon',
+    primary: 'from-zinc-800 to-zinc-900',
+    secondary: 'from-zinc-800/30 to-zinc-900/30',
+    accent: 'text-zinc-200',
+    bg: 'bg-[#0b0b0d]',
+    cardBg: 'bg-[#131316]',
+    border: 'border-zinc-800'
   }
 };
 
@@ -253,7 +253,7 @@ function PremiumCommunityChat() {
                   placeholder="Search messages..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  className="pl-10 pr-4 py-2 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500/20 transition-all"
                 />
               </div>
               
@@ -305,7 +305,7 @@ function PremiumCommunityChat() {
         {!isConnected && !error && (
           <div className="flex justify-center items-center h-64 mb-6">
             <div className="flex items-center space-x-4">
-              <div className={`w-8 h-8 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin`}></div>
+              <div className={`w-8 h-8 border-4 border-gray-600 border-t-zinc-400 rounded-full animate-spin`}></div>
               <p className="text-lg text-gray-400">Connecting to chat...</p>
             </div>
           </div>
@@ -417,7 +417,7 @@ function PremiumCommunityChat() {
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
                         placeholder="Type your message..."
-                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all pr-12"
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/50 rounded-xl text-white placeholder-gray-400 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-500/20 transition-all pr-12"
                         disabled={!isConnected}
                       />
                       <button

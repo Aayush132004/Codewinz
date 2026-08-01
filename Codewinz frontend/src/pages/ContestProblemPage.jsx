@@ -258,9 +258,9 @@ const ContestProblemPage = () => {
   }
 
   return (
-    <div className="h-screen flex bg-gradient-to-br from-[#0f172a] via-[#1e253b] to-[#1e293b] text-base-content">
+    <div className="h-screen flex flex-col md:flex-row bg-[#060608] text-gray-200 overflow-y-auto md:overflow-hidden">
       {/* Left Panel */}
-      <div className="w-1/2 flex flex-col border-r border-base-300 bg-white/5 backdrop-blur-md shadow-inner">
+      <div className="w-full md:w-1/2 h-[55vh] md:h-full flex-shrink-0 flex flex-col border-b md:border-b-0 md:border-r border-[#1c1c22] bg-[#101012] shadow-inner">
         {/* Left Tabs */}
         <div className="tabs tabs-lifted px-6 py-3 border-b border-base-300">
           {['description', 'testcase', 'result', 'submissions'].map((tab) => (
@@ -471,14 +471,14 @@ const ContestProblemPage = () => {
       </div>
 
       {/* Right Panel - Code Editor */}
-      <div className="w-1/2 flex flex-col bg-base-100">
+      <div className="w-full md:w-1/2 h-[65vh] md:h-full flex-shrink-0 flex flex-col bg-[#101012] border border-[#1c1c22]">
         {/* Code Header */}
-        <div className="flex justify-between items-center p-4 bg-base-100 border-b border-base-300">
+        <div className="flex justify-between items-center p-4 bg-[#0e0e11] border-b border-[#1c1c22]">
           <div className="flex gap-4 items-center w-full justify-between">
             {/* Language Dropdown */}
             <div className="relative">
               <select
-                className="select select-sm bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                className="select select-sm bg-[#141416] text-white border-[#222226] focus:outline-none focus:ring-1 focus:ring-slate-700 rounded-full hover:bg-[#1a1a1f] transition-all"
                 value={selectedLanguage}
                 onChange={(e) => handleLanguageChange(e.target.value)}
               >
@@ -491,7 +491,7 @@ const ContestProblemPage = () => {
             {/* Theme Dropdown */}
             <div className="relative">
               <select
-                className="select select-sm bg-gray-800 text-white border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
+                className="select select-sm bg-[#141416] text-white border-[#222226] focus:outline-none focus:ring-1 focus:ring-slate-700 rounded-full hover:bg-[#1a1a1f] transition-all"
                 value={selectedTheme}
                 onChange={(e) => handleThemeChange(e.target.value)}
               >
@@ -511,7 +511,7 @@ const ContestProblemPage = () => {
         </div>
 
         {/* Code Editor */}
-        <div className="flex-1 rounded-2xl border border-[#2c3e50] bg-[#0f172a] shadow-md overflow-hidden">
+        <div className="flex-1 border border-[#1c1c22] bg-[#0e0e11] shadow-md overflow-hidden mx-4 mb-4 rounded-xl">
           <Editor
             height="100%"
             language={getLanguageForMonaco(selectedLanguage)}
@@ -540,17 +540,17 @@ const ContestProblemPage = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="bg-base-100 border-t border-base-300 flex justify-between">
-          <div className="flex p-4 pr-8 w-[100%] justify-end gap-10">
+        <div className="bg-[#0e0e11] border-t border-[#1c1c22] flex justify-end p-4">
+          <div className="flex gap-4">
             <button 
-              className={`btn btn-outline btn-sm ${loading ? 'loading' : ''}`} 
+              className={`btn btn-outline btn-sm ${loading ? 'loading' : ''} border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200`} 
               onClick={handleRun} 
               disabled={loading}
             >
               {loading ? 'Running...' : 'Run'}
             </button>
             <button 
-              className={`btn btn-primary btn-sm ${loading ? 'loading' : ''}`} 
+              className={`btn btn-sm ${loading ? 'loading' : ''} bg-[#222226] border-0 text-white hover:bg-[#2e2e34] shadow-lg transition-all duration-200`} 
               onClick={handleSubmitCode} 
               disabled={loading}
             >

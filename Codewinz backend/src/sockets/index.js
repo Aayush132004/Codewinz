@@ -380,27 +380,50 @@ function initSockets(io) {
             const { id: userId, firstName } = userDetails;
             console.log(`${firstName} (${userId}) disconnected from code session: ${sessionId} (socket: ${socket.id})`);
             
-            // Flush any pending save immediately
-            if (dbSaveTimeouts.has(sessionId)) {
-                clearTimeout(dbSaveTimeouts.get(sessionId));
-                dbSaveTimeouts.delete(sessionId);
-                const pendingCode = latestSessionCode.get(sessionId);
-                if (pendingCode !== undefined) {
-                    try {
-                        await CodeSession.updateOne({ sessionId }, { codeContent: pendingCode, lastModified: new Date() });
-                    } catch (error) {
-                        console.error(`Error flushing pending code to DB:`, error);
+            const isHostDisconnect = socket.codeSession && socket.codeSession.creatorId && socket.codeSession.creatorId.toString() === userId.toString();
+
+            if (isHostDisconnect) {
+                console.log(`Host ${firstName} disconnected. Terminating session ${sessionId}...`);
+                if (dbSaveTimeouts.has(sessionId)) {
+                    clearTimeout(dbSaveTimeouts.get(sessionId));
+                    dbSaveTimeouts.delete(sessionId);
+                }
+                
+                try {
+                    await CodeSession.deleteOne({ sessionId });
+                } catch (error) {
+                    console.error("Failed to delete session from DB on host disconnect:", error);
+                }
+
+                // Notify everyone in the room that the session has ended
+                codeIo.to(sessionId).emit('session-ended');
+
+                // Cleanup memory maps
+                latestSessionCode.delete(sessionId);
+                codeSessionUsers.delete(sessionId);
+            } else {
+                // Flush any pending save immediately
+                if (dbSaveTimeouts.has(sessionId)) {
+                    clearTimeout(dbSaveTimeouts.get(sessionId));
+                    dbSaveTimeouts.delete(sessionId);
+                    const pendingCode = latestSessionCode.get(sessionId);
+                    if (pendingCode !== undefined) {
+                        try {
+                            await CodeSession.updateOne({ sessionId }, { codeContent: pendingCode, lastModified: new Date() });
+                        } catch (error) {
+                            console.error(`Error flushing pending code to DB:`, error);
+                        }
                     }
                 }
-            }
 
-            removeUserFromSession(sessionId, userId, socket.id);
-            emitSessionUsersUpdate(sessionId);
-            
-            // Clean up memory maps if the session is empty
-            if (!codeSessionUsers.has(sessionId)) {
-                console.log(`Code session ${sessionId} is now empty.`);
-                latestSessionCode.delete(sessionId);
+                removeUserFromSession(sessionId, userId, socket.id);
+                emitSessionUsersUpdate(sessionId);
+                
+                // Clean up memory maps if the session is empty
+                if (!codeSessionUsers.has(sessionId)) {
+                    console.log(`Code session ${sessionId} is now empty.`);
+                    latestSessionCode.delete(sessionId);
+                }
             }
         });
 

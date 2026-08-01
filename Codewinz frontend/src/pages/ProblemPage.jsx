@@ -291,9 +291,12 @@ const ProblemPage = () => {
   return (
     <div className="h-screen flex flex-col bg-[#060608] text-gray-200">
       <Navbar />
-      <div className="flex-1 flex pt-16 overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row pt-16 overflow-y-auto md:overflow-hidden">
         {/* Left Panel */}
-        <div className="flex flex-col border-r border-[#1c1c22] bg-[#101012] shadow-inner" style={{ width: `${leftPanelWidth}%` }}>
+        <div 
+          className="flex flex-col border-b md:border-b-0 md:border-r border-[#1c1c22] bg-[#101012] shadow-inner w-full md:w-[var(--left-width)] h-[55vh] md:h-full flex-shrink-0" 
+          style={{ '--left-width': `${leftPanelWidth}%` }}
+        >
           {/* Left Tabs */}
           <div className="tabs tabs-lifted px-6 py-3 border-b border-[#1c1c22] bg-[#0e0e11] flex justify-between items-center">
           <div className="flex">
@@ -599,14 +602,17 @@ const ProblemPage = () => {
 
       {/* Resizable Divider */}
       <div
-        className="w-2 bg-[#1c1c22] cursor-ew-resize hover:bg-slate-700 transition-colors duration-100 flex items-center justify-center"
+        className="hidden md:flex w-2 bg-[#1c1c22] cursor-ew-resize hover:bg-slate-700 transition-colors duration-100 items-center justify-center"
         onMouseDown={handleMouseDown}
       >
         <div className="w-1 h-8 bg-slate-600 rounded-full"></div>
       </div>
 
       {/* Right Panel - Code Editor */}
-      <div className="flex flex-col bg-[#101012]" style={{ width: `${100 - leftPanelWidth}%` }}>
+      <div 
+        className="flex flex-col bg-[#101012] w-full md:w-[var(--right-width)] h-[65vh] md:h-full flex-shrink-0" 
+        style={{ '--right-width': `${100 - leftPanelWidth}%` }}
+      >
         <div className="flex-1 flex flex-col">
           <div className="flex justify-between items-center p-4 bg-[#0e0e11] border-b border-[#1c1c22]">
             <div className="flex gap-4 items-center w-full justify-between">

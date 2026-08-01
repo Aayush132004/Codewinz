@@ -45,6 +45,7 @@ function CollaborativeEditor() {
     const [leftPanelWidth, setLeftPanelWidth] = useState(50);
     const [isRunning, setIsRunning] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSessionEnded, setIsSessionEnded] = useState(false);
 
     // --- Refs for managing state without re-renders ---
     const editorRef = useRef(null);
@@ -409,6 +410,15 @@ function CollaborativeEditor() {
                         ignoreChangeRef.current = true;
                         editorRef.current.setValue(data.codeContent);
                         ignoreChangeRef.current = false;
+                    }
+                });
+
+                newSocket.on('session-ended', () => {
+                    if (!isMounted) return;
+                    console.log('Session has been ended by the host.');
+                    setIsSessionEnded(true);
+                    if (socketRef.current) {
+                        socketRef.current.disconnect();
                     }
                 });
                 
@@ -848,6 +858,30 @@ function CollaborativeEditor() {
             </div>
         );
     }
+
+    if (isSessionEnded) {
+        return (
+            <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#060608] text-white p-6">
+                <div className="max-w-md w-full bg-[#101012] border border-zinc-800 rounded-2xl p-8 shadow-2xl text-center space-y-6">
+                    <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 rounded-full flex items-center justify-center mx-auto text-3xl">
+                        🔒
+                    </div>
+                    <div className="space-y-2">
+                        <h1 className="text-2xl font-bold tracking-tight text-white">Session Ended</h1>
+                        <p className="text-sm text-zinc-400">
+                            The session host has logged out or left the room. The collaborative session has ended.
+                        </p>
+                    </div>
+                    <button 
+                        onClick={() => navigate('/')} 
+                        className="btn w-full bg-white text-black hover:bg-zinc-200 border-0 py-3 rounded-xl font-semibold transition-all"
+                    >
+                        Return to Home
+                    </button>
+                </div>
+            </div>
+        );
+    }
     
     return (
         <div className="h-screen flex flex-col bg-[#060608] text-gray-200">
@@ -1119,14 +1153,15 @@ function CollaborativeEditor() {
                                     isRunning ? 'opacity-70 cursor-not-allowed' : ''
                                 } border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200`}
                                 onClick={handleRun} 
-                                disabled={isRunning}
+                                disabled={isRunning || !isHost}
+                                title={!isHost ? "Only the session host can run code" : ""}
                             >
                                 {isRunning ? (
                                     <Loader2 className="animate-spin mr-2" size={16} />
                                 ) : (
                                     <Code size={16} className="mr-1" />
                                 )}
-                                Run
+                                {isHost ? "Run" : "Run (Host Only)"}
                             </button>
                             <button 
                                 className={`btn btn-sm ${
