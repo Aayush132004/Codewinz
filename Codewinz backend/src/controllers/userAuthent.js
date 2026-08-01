@@ -340,9 +340,7 @@ const sendMail = async (req, res) => {
           </div>
         </div>
       </div>
-    `;
-
-    // A. If RESEND_API_KEY is configured, use HTTP API (never blocked by Render)
+        // A. If RESEND_API_KEY is configured, use HTTP API (never blocked by Render)
     if (process.env.RESEND_API_KEY) {
       console.log("Sending magic link via Resend API...");
       const resendRes = await fetch('https://api.resend.com/emails', {
@@ -370,18 +368,21 @@ const sendMail = async (req, res) => {
       return res.status(200).json({ message: "Magic link sent successfully!" });
     }
 
-    // B. If BREVO_API_KEY is configured, use Brevo HTTP API (never blocked by Render)
-    if (process.env.BREVO_API_KEY) {
+    // B. If BREVO_KEY or BREVO_API_KEY is configured, use Brevo HTTP API (never blocked by Render)
+    const activeBrevoKey = process.env.BREVO_KEY || process.env.BREVO_API_KEY;
+    if (activeBrevoKey) {
       console.log("Sending magic link via Brevo HTTP API...");
+      const senderEmail = process.env.MAIL_FROM || process.env.SENDER_MAIL || process.env.SMTP_USER;
+      
       const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
         method: 'POST',
         headers: {
-          'api-key': process.env.BREVO_API_KEY,
+          'api-key': activeBrevoKey,
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          sender: { name: 'CODEWINZ Support', email: process.env.SENDER_MAIL },
+          sender: { name: 'CODEWINZ Support', email: senderEmail },
           to: [{ email: emailId }],
           subject: '🔓 Access Your CODEWINZ Account',
           htmlContent: htmlContent,
@@ -399,31 +400,39 @@ const sendMail = async (req, res) => {
       return res.status(200).json({ message: "Magic link sent successfully!" });
     }
 
-    // C. Fallback to Gmail/Brevo SMTP (for local development)
-    console.log("Sending magic link via Nodemailer SMTP...");
-    const isGmail = process.env.SENDER_MAIL && process.env.SENDER_MAIL.includes("gmail.com");
+    // C. Fallback to SMTP (supports custom host/port/user or Gmail)
+    console.log("Sending magic link via SMTP...");
+    
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpPort = parseInt(process.env.SMTP_PORT, 10) || 587;
+    const smtpUser = process.env.SMTP_USER || process.env.SENDER_MAIL;
+    const smtpPass = process.env.SENDER_MAIL_PASS || process.env.BREVO_KEY; // Brevo SMTP pass is often the API key
+    const mailFrom = process.env.MAIL_FROM || process.env.SENDER_MAIL || smtpUser;
+
+    const isGmail = smtpUser && smtpUser.includes("gmail.com") && !smtpHost;
+
     const transportConfig = isGmail 
       ? {
           service: "gmail",
           auth: {
-            user: process.env.SENDER_MAIL,
-            pass: process.env.SENDER_MAIL_PASS,
+            user: smtpUser,
+            pass: smtpPass,
           }
         }
       : {
-          host: "smtp-relay.brevo.com",
-          port: 587,
-          secure: false,
+          host: smtpHost || "smtp-relay.brevo.com",
+          port: smtpPort,
+          secure: smtpPort === 465,
           auth: {
-            user: process.env.SENDER_MAIL,
-            pass: process.env.SENDER_MAIL_PASS,
+            user: smtpUser,
+            pass: smtpPass,
           }
         };
 
     const transporter = nodemailer.createTransport(transportConfig);
 
     const info = await transporter.sendMail({
-      from: `"CODEWINZ Support" <${process.env.SENDER_MAIL}>`,
+      from: `"CODEWINZ Support" <${mailFrom}>`,
       to: emailId,
       subject: "🔓 Access Your CODEWINZ Account",
       text: textContent,
