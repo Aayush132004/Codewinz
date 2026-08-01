@@ -340,7 +340,9 @@ const sendMail = async (req, res) => {
           </div>
         </div>
       </div>
-        // A. If RESEND_API_KEY is configured, use HTTP API (never blocked by Render)
+    `;
+
+    // A. If RESEND_API_KEY is configured, use HTTP API (never blocked by Render)
     if (process.env.RESEND_API_KEY) {
       console.log("Sending magic link via Resend API...");
       const resendRes = await fetch('https://api.resend.com/emails', {
