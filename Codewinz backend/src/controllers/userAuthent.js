@@ -301,6 +301,77 @@ const sendMail = async (req, res) => {
       { expiresIn: 5 * 60 }
     );
 
+    const magicLoginLink = `${process.env.FRONTEND_URL}/magic-login/${token}`;
+
+    const textContent = `Hello,\n\nWe received a request to login to your CODEWINZ account. Click or copy the link below to access your account:\n\n${magicLoginLink}\n\nThis link is valid for 5 minutes. If you did not request this, you can safely ignore this email.\n\nBest regards,\nCODEWINZ Team`;
+    
+    const htmlContent = `
+      <div style="font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #060608; padding: 40px 20px; color: #e4e4e7; text-align: center;">
+        <div style="background-color: #0f0f11; border: 1px solid #27272a; border-radius: 16px; max-width: 500px; margin: 0 auto; padding: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">
+          <!-- Logo Header -->
+          <div style="margin-bottom: 24px;">
+            <h2 style="color: #ffffff; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin: 0;">
+              CODEWINZ
+            </h2>
+          </div>
+          
+          <!-- Message Body -->
+          <h1 style="font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 16px;">
+            🔒 Instant Access Link
+          </h1>
+          <p style="font-size: 15px; line-height: 24px; color: #a1a1aa; margin-bottom: 32px;">
+            We received a request to log in to your account. Click the button below to sign in instantly. This link is valid for <strong>5 minutes</strong>.
+          </p>
+
+          <!-- CTA Button -->
+          <div style="margin: 32px 0;">
+            <a href="${magicLoginLink}"
+               style="background-color: #ffffff; color: #000000; padding: 14px 32px; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 10px; display: inline-block; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1); transition: all 0.2s ease;">
+              Sign In to CodeWinz
+            </a>
+          </div>
+
+          <!-- Footer Details -->
+          <p style="font-size: 13px; color: #71717a; margin-top: 32px; border-top: 1px solid #1f1f23; padding-top: 24px;">
+            If you didn’t request this email, you can safely ignore it.
+          </p>
+          <div style="margin-top: 24px; font-size: 11px; color: #52525b;">
+            © ${new Date().getFullYear()} CODEWINZ. All rights reserved.
+          </div>
+        </div>
+      </div>
+    `;
+
+    // A. If RESEND_API_KEY is configured, use HTTP API (never blocked by Render)
+    if (process.env.RESEND_API_KEY) {
+      console.log("Sending magic link via Resend API...");
+      const resendRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'CODEWINZ Support <onboarding@resend.dev>',
+          to: emailId,
+          subject: '🔓 Access Your CODEWINZ Account',
+          text: textContent,
+          html: htmlContent
+        })
+      });
+
+      if (!resendRes.ok) {
+        const errText = await resendRes.text();
+        throw new Error(`Resend API error: ${errText}`);
+      }
+
+      const resendData = await resendRes.json();
+      console.log("Magic link email sent successfully via Resend API:", resendData.id);
+      return res.status(200).json({ message: "Magic link sent successfully!" });
+    }
+
+    // B. Fallback to Gmail SMTP (for local development)
+    console.log("Sending magic link via Nodemailer SMTP...");
     const transporter = nodemailer.createTransport({
       service: "gmail",
       port: 587,
@@ -311,52 +382,15 @@ const sendMail = async (req, res) => {
       },
     });
 
-    const magicLoginLink = `${process.env.FRONTEND_URL}/magic-login/${token}`;
-
     const info = await transporter.sendMail({
       from: `"CODEWINZ Support" <${process.env.SENDER_MAIL}>`,
       to: emailId,
       subject: "🔓 Access Your CODEWINZ Account",
-      text: `Hello,\n\nWe received a request to login to your CODEWINZ account. Click or copy the link below to access your account:\n\n${magicLoginLink}\n\nThis link is valid for 5 minutes. If you did not request this, you can safely ignore this email.\n\nBest regards,\nCODEWINZ Team`,
-      html: `
-        <div style="font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #060608; padding: 40px 20px; color: #e4e4e7; text-align: center;">
-          <div style="background-color: #0f0f11; border: 1px solid #27272a; border-radius: 16px; max-width: 500px; margin: 0 auto; padding: 40px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);">
-            <!-- Logo Header -->
-            <div style="margin-bottom: 24px;">
-              <h2 style="color: #ffffff; font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin: 0;">
-                CODEWINZ
-              </h2>
-            </div>
-            
-            <!-- Message Body -->
-            <h1 style="font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 16px;">
-              🔒 Instant Access Link
-            </h1>
-            <p style="font-size: 15px; line-height: 24px; color: #a1a1aa; margin-bottom: 32px;">
-              We received a request to log in to your account. Click the button below to sign in instantly. This link is valid for <strong>5 minutes</strong>.
-            </p>
-
-            <!-- CTA Button -->
-            <div style="margin: 32px 0;">
-              <a href="${magicLoginLink}"
-                 style="background-color: #ffffff; color: #000000; padding: 14px 32px; font-size: 15px; font-weight: 600; text-decoration: none; border-radius: 10px; display: inline-block; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1); transition: all 0.2s ease;">
-                Sign In to CodeWinz
-              </a>
-            </div>
-
-            <!-- Footer Details -->
-            <p style="font-size: 13px; color: #71717a; margin-top: 32px; border-top: 1px solid #1f1f23; padding-top: 24px;">
-              If you didn’t request this email, you can safely ignore it.
-            </p>
-            <div style="margin-top: 24px; font-size: 11px; color: #52525b;">
-              © ${new Date().getFullYear()} CODEWINZ. All rights reserved.
-            </div>
-          </div>
-        </div>
-      `
+      text: textContent,
+      html: htmlContent
     });
 
-    console.log("Magic link email sent successfully:", info.messageId);
+    console.log("Magic link email sent successfully via SMTP:", info.messageId);
     return res.status(200).json({ message: "Magic link sent successfully!" });
 
   } catch (err) {
