@@ -370,17 +370,57 @@ const sendMail = async (req, res) => {
       return res.status(200).json({ message: "Magic link sent successfully!" });
     }
 
-    // B. Fallback to Gmail SMTP (for local development)
+    // B. If BREVO_API_KEY is configured, use Brevo HTTP API (never blocked by Render)
+    if (process.env.BREVO_API_KEY) {
+      console.log("Sending magic link via Brevo HTTP API...");
+      const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: 'CODEWINZ Support', email: process.env.SENDER_MAIL },
+          to: [{ email: emailId }],
+          subject: '🔓 Access Your CODEWINZ Account',
+          htmlContent: htmlContent,
+          textContent: textContent
+        })
+      });
+
+      if (!brevoRes.ok) {
+        const errText = await brevoRes.text();
+        throw new Error(`Brevo API error: ${errText}`);
+      }
+
+      const brevoData = await brevoRes.json();
+      console.log("Magic link email sent successfully via Brevo API:", brevoData.messageId);
+      return res.status(200).json({ message: "Magic link sent successfully!" });
+    }
+
+    // C. Fallback to Gmail/Brevo SMTP (for local development)
     console.log("Sending magic link via Nodemailer SMTP...");
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.SENDER_MAIL,
-        pass: process.env.SENDER_MAIL_PASS,
-      },
-    });
+    const isGmail = process.env.SENDER_MAIL && process.env.SENDER_MAIL.includes("gmail.com");
+    const transportConfig = isGmail 
+      ? {
+          service: "gmail",
+          auth: {
+            user: process.env.SENDER_MAIL,
+            pass: process.env.SENDER_MAIL_PASS,
+          }
+        }
+      : {
+          host: "smtp-relay.brevo.com",
+          port: 587,
+          secure: false,
+          auth: {
+            user: process.env.SENDER_MAIL,
+            pass: process.env.SENDER_MAIL_PASS,
+          }
+        };
+
+    const transporter = nodemailer.createTransport(transportConfig);
 
     const info = await transporter.sendMail({
       from: `"CODEWINZ Support" <${process.env.SENDER_MAIL}>`,
