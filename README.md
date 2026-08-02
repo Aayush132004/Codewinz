@@ -16,7 +16,7 @@ CodeWinz is structured around a distributed, real-time client-server model desig
 graph TD
     Client[React Frontend] <-->|WebSockets / Socket.io| Backend[Node/Express Backend]
     Client <-->|HTTPS Rest APIs| Backend
-    Backend <-->|Session Caching & Blacklists| Redis[(Redis Labs Cache)]
+    Backend <-->|JWT Blacklisting| Redis[(Redis Labs Cache)]
     Backend <-->|Persistence Store| DB[(MongoDB Atlas)]
     Backend <-->|Code Compilation & Sandboxing| Judge0[Judge0 API compiler]
     Backend <-->|Context-Aware Tutoring| Gemini[Gemini 2.0 API]
